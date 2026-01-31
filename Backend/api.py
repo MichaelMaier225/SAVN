@@ -35,6 +35,6 @@ def list_transactions(company_id: str):
     return get_transactions(company_id)
 
 #pip install fastapi uvicorn
-#uvicorn Backend.api:app --reload
+#python -m uvicorn Backend.api:app --reload
 
-#To run http://127.0.0.1:8000/docs
+#To run http://127.0.0.1:8000
