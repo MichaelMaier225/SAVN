@@ -35,8 +35,20 @@
           "description": "Steam",
           "amount": 100.0,
           "category": "Gaming"
+        },
+        {
+          "transaction_id": "d99e1a68-ac40-4da0-84e3-0313a004c57d",
+          "company_id": "wyverns",
+          "date": "2026-02-01",
+          "description": "Steam",
+          "amount": 100.0,
+          "category": "Gaming"
         }
       ]
+    },
+    "0123": {
+      "name": "Burgersmith",
+      "transactions": []
     }
   }
 }

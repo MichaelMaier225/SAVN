@@ -190,7 +190,7 @@ def summary_flow(active_company):
 
 def company_session(active_company):
     while True:
-        print(f"\nClearLedger — {active_company}")
+        print(f"\nSAVN — {active_company}")
         print("1. Add transaction")
         print("2. View transactions")
         print("3. Edit transaction")
@@ -225,7 +225,7 @@ def company_session(active_company):
 
 def main():
     while True:
-        print("\nClearLedger")
+        print("\nSAVN")
         print("1. Select company")
         print("2. Create company")
         print("3. Exit")
