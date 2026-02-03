@@ -14,6 +14,7 @@ import {
   getProducts,
   updateProduct,
   removeProduct,
+  setProductInventory,
   Product,
 } from "../../store/products"
 
@@ -26,6 +27,7 @@ export default function ProductEditScreen() {
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [cost, setCost] = useState("")
+  const [inventory, setInventory] = useState("")
 
   useEffect(() => {
     const found = getProducts().find(p => p.id === productId)
@@ -34,6 +36,7 @@ export default function ProductEditScreen() {
       setName(found.name)
       setPrice(String(found.price))
       setCost(String(found.cost))
+      setInventory(String(found.qty))
     }
   }, [])
 
@@ -56,6 +59,23 @@ export default function ProductEditScreen() {
       cost: Number(cost),
     })
 
+    router.back()
+  }
+
+  const handleInventoryUpdate = () => {
+    if (!inventory) return
+
+    const inventoryValue = Number.parseInt(inventory, 10)
+
+    if (Number.isNaN(inventoryValue) || inventoryValue < 0) {
+      Alert.alert(
+        "Invalid inventory",
+        "Enter a valid inventory count."
+      )
+      return
+    }
+
+    setProductInventory(product.id, inventoryValue)
     router.back()
   }
 
@@ -86,6 +106,23 @@ export default function ProductEditScreen() {
           keyboardType="numeric"
           onChangeText={setCost}
         />
+
+        <Text style={styles.label}>Inventory on hand</Text>
+        <TextInput
+          style={styles.input}
+          value={inventory}
+          keyboardType="numeric"
+          onChangeText={setInventory}
+        />
+        <Text style={styles.helper}>
+          Adjusting inventory does not change revenue or expenses.
+        </Text>
+        <TouchableOpacity
+          style={styles.inventoryBtn}
+          onPress={handleInventoryUpdate}
+        >
+          <Text style={styles.inventoryText}>Update inventory</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.saveBtn}
@@ -145,6 +182,22 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     padding: 12,
     marginBottom: 15,
+  },
+  helper: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 12,
+  },
+  inventoryBtn: {
+    backgroundColor: "#111",
+    padding: 14,
+    borderRadius: 6,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  inventoryText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
   saveBtn: {
     backgroundColor: "#000",

@@ -8,10 +8,6 @@ export default function TabLayout() {
         options={{ title: "Inventory" }}
       />
       <Tabs.Screen
-        name="add"
-        options={{ title: "Add" }}
-      />
-      <Tabs.Screen
         name="catalog"
         options={{ title: "Vendors" }}
       />

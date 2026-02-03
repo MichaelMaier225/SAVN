@@ -156,6 +156,23 @@ export const restockProductBulk = (
   saveState()
 }
 
+export const setProductInventory = (id: number, newQty: number) => {
+  if (Number.isNaN(newQty)) return
+
+  snapshot()
+
+  products = products.map(p =>
+    p.id === id
+      ? {
+          ...p,
+          qty: Math.max(0, Math.floor(newQty)),
+        }
+      : p
+  )
+
+  saveState()
+}
+
 export const wasteProduct = (id: number) => {
   snapshot()
 
