@@ -162,6 +162,42 @@ export const sellProduct = (id: number) => {
   saveState()
 }
 
+export const sellProductBulk = (
+  id: number,
+  qtyToSell: number,
+  totalRevenue: number
+) => {
+  if (qtyToSell <= 0 || totalRevenue < 0) return
+
+  snapshot()
+
+  let soldProduct: Product | null = null
+
+  products = products.map(p => {
+    if (p.id === id) {
+      soldProduct = p
+      return {
+        ...p,
+        qty: p.qty - qtyToSell,
+        revenue: p.revenue + totalRevenue,
+      }
+    }
+    return p
+  })
+
+  if (soldProduct) {
+    recordTransaction({
+      productId: soldProduct.id,
+      productName: soldProduct.name,
+      type: "sale",
+      quantity: qtyToSell,
+      amount: totalRevenue,
+    })
+  }
+
+  saveState()
+}
+
 export const restockProduct = (id: number) => {
   snapshot()
 

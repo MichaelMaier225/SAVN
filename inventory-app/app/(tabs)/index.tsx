@@ -17,6 +17,7 @@ import {
   sellProduct,
   restockProduct,
   restockProductBulk,
+  sellProductBulk,
   undoLastAction,
   Product,
 } from "../../store/products"
@@ -31,6 +32,12 @@ export default function HomeScreen() {
   const [bulkQty, setBulkQty] = useState("1")
   const [bulkTotal, setBulkTotal] = useState("")
   const [bulkTotalTouched, setBulkTotalTouched] = useState(false)
+  const [bulkSaleProduct, setBulkSaleProduct] =
+    useState<Product | null>(null)
+  const [bulkSaleQty, setBulkSaleQty] = useState("1")
+  const [bulkSaleTotal, setBulkSaleTotal] = useState("")
+  const [bulkSaleTotalTouched, setBulkSaleTotalTouched] =
+    useState(false)
   const { t } = useLanguage()
   const router = useRouter()
   const { currency, formatMoney, toDisplayValue, fromDisplayValue } =
@@ -61,6 +68,19 @@ export default function HomeScreen() {
     setBulkProduct(null)
   }
 
+  const openBulkSale = (product: Product) => {
+    setBulkSaleProduct(product)
+    setBulkSaleQty("1")
+    setBulkSaleTotal(
+      toDisplayValue(product.price).toFixed(displayDecimals)
+    )
+    setBulkSaleTotalTouched(false)
+  }
+
+  const closeBulkSale = () => {
+    setBulkSaleProduct(null)
+  }
+
   const applyBulkRestock = () => {
     if (!bulkProduct) return
     const qtyValue = Number.parseInt(bulkQty, 10)
@@ -89,6 +109,42 @@ export default function HomeScreen() {
     closeBulkRestock()
   }
 
+  const applyBulkSale = () => {
+    if (!bulkSaleProduct) return
+    const qtyValue = Number.parseInt(bulkSaleQty, 10)
+    const totalValue = Number.parseFloat(bulkSaleTotal)
+    const totalUsd = fromDisplayValue(totalValue)
+
+    if (Number.isNaN(qtyValue) || qtyValue <= 0) {
+      Alert.alert(
+        t("enterValidQuantityTitle"),
+        t("enterValidQuantityBody")
+      )
+      return
+    }
+
+    if (qtyValue > bulkSaleProduct.qty) {
+      Alert.alert(
+        t("insufficientStockTitle"),
+        t("insufficientStockBody")
+      )
+      return
+    }
+
+    if (Number.isNaN(totalValue) || totalValue < 0) {
+      Alert.alert(
+        t("enterValidTotalTitle"),
+        t("enterValidTotalBody")
+      )
+      return
+    }
+
+    sellProductBulk(bulkSaleProduct.id, qtyValue, totalUsd)
+    setCanUndo(true)
+    refresh()
+    closeBulkSale()
+  }
+
   const updateBulkQty = (value: string) => {
     setBulkQty(value)
     const parsedQty = Number.parseInt(value, 10)
@@ -106,15 +162,44 @@ export default function HomeScreen() {
     }
   }
 
+  const updateBulkSaleQty = (value: string) => {
+    setBulkSaleQty(value)
+    const parsedQty = Number.parseInt(value, 10)
+    if (
+      bulkSaleProduct &&
+      !bulkSaleTotalTouched &&
+      !Number.isNaN(parsedQty) &&
+      parsedQty > 0
+    ) {
+      setBulkSaleTotal(
+        toDisplayValue(parsedQty * bulkSaleProduct.price).toFixed(
+          displayDecimals
+        )
+      )
+    }
+  }
+
   const updateBulkTotal = (value: string) => {
     setBulkTotal(value)
     setBulkTotalTouched(true)
+  }
+
+  const updateBulkSaleTotal = (value: string) => {
+    setBulkSaleTotal(value)
+    setBulkSaleTotalTouched(true)
   }
 
   const parsedBulkQty = Number.parseInt(bulkQty, 10)
   const estimatedTotalUsd =
     bulkProduct && !Number.isNaN(parsedBulkQty) && parsedBulkQty > 0
       ? parsedBulkQty * bulkProduct.cost
+      : 0
+  const parsedBulkSaleQty = Number.parseInt(bulkSaleQty, 10)
+  const estimatedSaleTotalUsd =
+    bulkSaleProduct &&
+    !Number.isNaN(parsedBulkSaleQty) &&
+    parsedBulkSaleQty > 0
+      ? parsedBulkSaleQty * bulkSaleProduct.price
       : 0
 
   const revenue = products.reduce((sum, p) => sum + p.revenue, 0)
@@ -152,6 +237,7 @@ export default function HomeScreen() {
                       setCanUndo(true)
                       refresh()
                     }}
+                    onLongPress={() => openBulkSale(p)}
                   >
                     <Text style={styles.btnText}>−</Text>
                   </TouchableOpacity>
@@ -260,6 +346,56 @@ export default function HomeScreen() {
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalConfirm]}
                 onPress={applyBulkRestock}
+              >
+                <Text style={styles.modalConfirmText}>{t("apply")}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={!!bulkSaleProduct}
+        onRequestClose={closeBulkSale}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>
+              {t("bulkSale")} {bulkSaleProduct?.name}
+            </Text>
+            <Text style={styles.modalLabel}>{t("quantity")}</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={bulkSaleQty}
+              onChangeText={updateBulkSaleQty}
+              keyboardType="number-pad"
+              placeholder={t("enterQuantity")}
+            />
+            <Text style={styles.modalHint}>
+              {t("estimatedTotal")}:{" "}
+              {formatMoney(estimatedSaleTotalUsd)} (
+              {t("qtyUnitPrice")})
+            </Text>
+            <Text style={styles.modalLabel}>{t("totalRevenue")}</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={bulkSaleTotal}
+              onChangeText={updateBulkSaleTotal}
+              keyboardType="decimal-pad"
+              placeholder="0.00"
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancel]}
+                onPress={closeBulkSale}
+              >
+                <Text style={styles.modalCancelText}>{t("cancel")}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirm]}
+                onPress={applyBulkSale}
               >
                 <Text style={styles.modalConfirmText}>{t("apply")}</Text>
               </TouchableOpacity>

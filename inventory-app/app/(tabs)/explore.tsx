@@ -37,6 +37,15 @@ export default function ExploreScreen() {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>
+            {t("exploreBulkSalesTitle")}
+          </Text>
+          <Text style={styles.cardBody}>
+            {t("exploreBulkSalesBody")}
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
             {t("exploreCatalogTitle")}
           </Text>
           <Text style={styles.cardBody}>
