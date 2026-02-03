@@ -14,11 +14,13 @@ import {
   Transaction,
 } from "../../store/transactions"
 import { useLanguage } from "../../hooks/use-language"
+import { useCurrency } from "../../hooks/use-currency"
 
 export default function AnalyticsScreen() {
   const [products, setProducts] = useState<Product[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const { t } = useLanguage()
+  const { formatMoney } = useCurrency()
 
   useFocusEffect(
     useCallback(() => {
@@ -90,10 +92,14 @@ export default function AnalyticsScreen() {
     }
 
     const periodSummaries = [
-      summarizePeriod("Today", startOfDay, nowTs),
-      summarizePeriod("This Week", startOfWeekDate.getTime(), nowTs),
-      summarizePeriod("This Month", startOfMonth, nowTs),
-      summarizePeriod("This Year", startOfYear, nowTs),
+      summarizePeriod(t("periodToday"), startOfDay, nowTs),
+      summarizePeriod(
+        t("periodWeek"),
+        startOfWeekDate.getTime(),
+        nowTs
+      ),
+      summarizePeriod(t("periodMonth"), startOfMonth, nowTs),
+      summarizePeriod(t("periodYear"), startOfYear, nowTs),
     ]
 
     const totalSales = byType("sale")
@@ -209,9 +215,7 @@ export default function AnalyticsScreen() {
         ),
       },
     }
-  }, [products, transactions])
-
-  const formatMoney = (value: number) => `$${value.toFixed(2)}`
+  }, [products, t, transactions])
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -227,16 +231,16 @@ export default function AnalyticsScreen() {
                 {formatMoney(period.revenue)}
               </Text>
               <Text style={styles.detail}>
-                Sales: {period.salesCount}
+                {t("sales")}: {period.salesCount}
               </Text>
               <Text style={styles.detail}>
-                Avg sale: {formatMoney(period.avgSale)}
+                {t("avgSale")}: {formatMoney(period.avgSale)}
               </Text>
               <Text style={styles.detail}>
-                Restock: {formatMoney(period.restockSpend)}
+                {t("restock")}: {formatMoney(period.restockSpend)}
               </Text>
               <Text style={styles.detailBold}>
-                Profit: {formatMoney(period.profit)}
+                {t("profit")}: {formatMoney(period.profit)}
               </Text>
             </View>
           ))}
@@ -246,13 +250,13 @@ export default function AnalyticsScreen() {
         <View style={styles.cardWide}>
           <View style={styles.row}>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Lifetime revenue</Text>
+              <Text style={styles.label}>{t("lifetimeRevenue")}</Text>
               <Text style={styles.value}>
                 {formatMoney(totals.totalRevenue)}
               </Text>
             </View>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Restock spend</Text>
+              <Text style={styles.label}>{t("restockSpend")}</Text>
               <Text style={styles.value}>
                 {formatMoney(totals.totalRestockSpend)}
               </Text>
@@ -260,20 +264,20 @@ export default function AnalyticsScreen() {
           </View>
           <View style={styles.row}>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Gross profit</Text>
+              <Text style={styles.label}>{t("grossProfit")}</Text>
               <Text style={styles.value}>
                 {formatMoney(totals.grossProfit)}
               </Text>
             </View>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Gross margin</Text>
+              <Text style={styles.label}>{t("grossMargin")}</Text>
               <Text style={styles.value}>
                 {totals.grossMargin.toFixed(1)}%
               </Text>
             </View>
           </View>
           <Text style={styles.helper}>
-            {totals.salesCount} total sales logged.
+            {totals.salesCount} {t("salesLogged")}
           </Text>
         </View>
 
@@ -290,19 +294,19 @@ export default function AnalyticsScreen() {
           <Text style={styles.label}>{t("mostSoldItem")}</Text>
           <Text style={styles.value}>
             {productInsights.topVolumeProduct
-              ? `${productInsights.topVolumeProduct.name} · ${productInsights.topVolumeProduct.quantity} sold`
+              ? `${productInsights.topVolumeProduct.name} · ${productInsights.topVolumeProduct.quantity} ${t("sold")}`
               : t("noSales")}
           </Text>
           <Text style={styles.label}>{t("slowMover")}</Text>
           <Text style={styles.value}>
             {productInsights.slowMoverProduct
-              ? `${productInsights.slowMoverProduct.name} · ${productInsights.slowMoverProduct.quantity} sold`
+              ? `${productInsights.slowMoverProduct.name} · ${productInsights.slowMoverProduct.quantity} ${t("sold")}`
               : t("noSales")}
           </Text>
           <Text style={styles.label}>{t("mostRestockedItem")}</Text>
           <Text style={styles.value}>
             {productInsights.mostRestocked
-              ? `${productInsights.mostRestocked.name} · ${productInsights.mostRestocked.quantity} restocked`
+              ? `${productInsights.mostRestocked.name} · ${productInsights.mostRestocked.quantity} ${t("restocked")}`
               : t("noRestocks")}
           </Text>
           <Text style={styles.label}>{t("bestMarginItem")}</Text>
@@ -317,13 +321,13 @@ export default function AnalyticsScreen() {
         <View style={styles.cardWide}>
           <View style={styles.row}>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Active items</Text>
+              <Text style={styles.label}>{t("activeItems")}</Text>
               <Text style={styles.value}>
                 {inventoryInsights.activeCount}
               </Text>
             </View>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Inventory value</Text>
+              <Text style={styles.label}>{t("inventoryValue")}</Text>
               <Text style={styles.value}>
                 {formatMoney(inventoryInsights.inventoryValue)}
               </Text>
@@ -331,13 +335,13 @@ export default function AnalyticsScreen() {
           </View>
           <View style={styles.row}>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Potential revenue</Text>
+              <Text style={styles.label}>{t("potentialRevenue")}</Text>
               <Text style={styles.value}>
                 {formatMoney(inventoryInsights.potentialRevenue)}
               </Text>
             </View>
             <View style={styles.rowItem}>
-              <Text style={styles.label}>Low stock</Text>
+              <Text style={styles.label}>{t("lowStock")}</Text>
               <Text style={styles.value}>
                 {inventoryInsights.lowStock.length}
               </Text>
@@ -351,7 +355,7 @@ export default function AnalyticsScreen() {
             ) : (
               inventoryInsights.lowStock.slice(0, 4).map(product => (
                 <Text key={product.id} style={styles.helper}>
-                  {product.name} · {product.qty} left
+                  {product.name} · {product.qty} {t("left")}
                 </Text>
               ))
             )}

@@ -1,14 +1,16 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  TextInput,
 } from "react-native"
 
 import { useLanguage } from "../../hooks/use-language"
-import { Language } from "../../store/settings"
+import { useCurrency } from "../../hooks/use-currency"
+import { Currency, Language } from "../../store/settings"
 
 const languageOptions: Array<{
   value: Language
@@ -30,11 +32,40 @@ const languageOptions: Array<{
 export default function SettingsScreen() {
   const { language, setLanguage, t } = useLanguage()
   const [updating, setUpdating] = useState<Language | null>(null)
+  const {
+    currency,
+    setCurrency,
+    usdToVndRate,
+    setUsdToVndRate,
+  } = useCurrency()
+  const [rateInput, setRateInput] = useState(
+    usdToVndRate.toString()
+  )
+
+  useEffect(() => {
+    setRateInput(usdToVndRate.toString())
+  }, [usdToVndRate])
 
   const handleSelect = async (next: Language) => {
     setUpdating(next)
     await setLanguage(next)
     setUpdating(null)
+  }
+
+  const currencyOptions: Array<{
+    value: Currency
+    label: string
+  }> = [
+    { value: "USD", label: t("currencyUSD") },
+    { value: "VND", label: t("currencyVND") },
+  ]
+
+  const handleRateChange = (value: string) => {
+    setRateInput(value)
+    const parsed = Number.parseFloat(value)
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      setUsdToVndRate(parsed)
+    }
   }
 
   return (
@@ -71,6 +102,48 @@ export default function SettingsScreen() {
             )
           })}
         </View>
+
+        <View style={[styles.card, styles.cardSpacing]}>
+          <Text style={styles.sectionTitle}>{t("currency")}</Text>
+          <Text style={styles.helperText}>{t("currencyHelper")}</Text>
+          {currencyOptions.map(option => {
+            const isActive = currency === option.value
+            return (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.optionRow,
+                  isActive && styles.optionRowActive,
+                ]}
+                onPress={() => setCurrency(option.value)}
+              >
+                <View style={styles.optionText}>
+                  <Text style={styles.optionLabel}>{option.label}</Text>
+                </View>
+                <Text style={styles.optionStatus}>
+                  {isActive ? "✓" : ""}
+                </Text>
+              </TouchableOpacity>
+            )
+          })}
+          {currency === "VND" ? (
+            <View style={styles.rateSection}>
+              <Text style={styles.rateLabel}>
+                {t("vndRateLabel")}
+              </Text>
+              <TextInput
+                style={styles.rateInput}
+                value={rateInput}
+                onChangeText={handleRateChange}
+                keyboardType="decimal-pad"
+                placeholder="24500"
+              />
+              <Text style={styles.rateHelper}>
+                {t("vndRateHelper")}
+              </Text>
+            </View>
+          ) : null}
+        </View>
       </View>
     </SafeAreaView>
   )
@@ -93,6 +166,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginBottom: 16,
+  },
+  cardSpacing: {
+    marginTop: 16,
   },
   card: {
     borderWidth: 1,
@@ -136,5 +212,34 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     color: "#2c7a7b",
+  },
+  helperText: {
+    fontSize: 12,
+    color: "#777",
+    marginBottom: 12,
+  },
+  rateSection: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+  },
+  rateLabel: {
+    fontSize: 13,
+    color: "#555",
+    marginBottom: 6,
+  },
+  rateInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 15,
+    marginBottom: 6,
+  },
+  rateHelper: {
+    fontSize: 12,
+    color: "#666",
   },
 })
