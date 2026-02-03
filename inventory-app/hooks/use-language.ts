@@ -13,6 +13,7 @@ type TranslationKey =
   | "appLanguage"
   | "avgSale"
   | "bestMarginItem"
+  | "bulkSale"
   | "bulkRestock"
   | "businessHealth"
   | "cancel"
@@ -31,6 +32,8 @@ type TranslationKey =
   | "exploreHeadline"
   | "exploreFastSalesTitle"
   | "exploreFastSalesBody"
+  | "exploreBulkSalesTitle"
+  | "exploreBulkSalesBody"
   | "exploreBulkRestockTitle"
   | "exploreBulkRestockBody"
   | "exploreCatalogTitle"
@@ -48,6 +51,8 @@ type TranslationKey =
   | "historyRestock"
   | "historyAdjustment"
   | "holdRestock"
+  | "insufficientStockTitle"
+  | "insufficientStockBody"
   | "inventory"
   | "inventoryValue"
   | "inventoryWatch"
@@ -72,6 +77,7 @@ type TranslationKey =
   | "profit"
   | "productInsights"
   | "qtyUnitCost"
+  | "qtyUnitPrice"
   | "revenue"
   | "restocked"
   | "sold"
@@ -82,6 +88,7 @@ type TranslationKey =
   | "stockHealthy"
   | "topRevenueItem"
   | "totalCost"
+  | "totalRevenue"
   | "totalSales"
   | "undo"
   | "vendors"
@@ -134,6 +141,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     appLanguage: "App language",
     avgSale: "Avg sale",
     bestMarginItem: "Best margin item",
+    bulkSale: "Bulk sale",
     bulkRestock: "Bulk restock",
     businessHealth: "Business health",
     cancel: "Cancel",
@@ -154,6 +162,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     exploreFastSalesTitle: "Sell fast from the Inventory tab",
     exploreFastSalesBody:
       "Tap − or + to record sales and restocks in seconds. Each tap updates stock and revenue automatically.",
+    exploreBulkSalesTitle: "Long-press − for bulk sales",
+    exploreBulkSalesBody:
+      "Selling a lot at once? Long-press − to enter quantity and total revenue, including discounts.",
     exploreBulkRestockTitle: "Long-press + for bulk restock",
     exploreBulkRestockBody:
       "When you restock a lot at once, long-press + to enter quantity and total cost in one step.",
@@ -174,7 +185,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     historySale: "Sold {quantity} {product} · {amount}",
     historyRestock: "Restocked {quantity} {product} · {amount}",
     historyAdjustment: "Adjusted {quantity} {product} · {amount}",
-    holdRestock: "Hold + to restock in bulk.",
+    holdRestock: "Hold + to restock in bulk. Hold − to sell in bulk.",
+    insufficientStockTitle: "Not enough inventory",
+    insufficientStockBody:
+      "You cannot sell more than the available stock.",
     inventory: "Inventory",
     inventoryValue: "Inventory value",
     inventoryWatch: "Inventory watch",
@@ -199,6 +213,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     profit: "Profit",
     productInsights: "Product insights",
     qtyUnitCost: "qty × unit cost",
+    qtyUnitPrice: "qty × unit price",
     revenue: "Revenue",
     restocked: "restocked",
     sold: "sold",
@@ -209,6 +224,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     stockHealthy: "Stock levels look healthy.",
     topRevenueItem: "Top revenue item",
     totalCost: "Total cost",
+    totalRevenue: "Total revenue",
     totalSales: "Total sales",
     undo: "Undo",
     vendors: "Vendors",
@@ -265,6 +281,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     appLanguage: "Ngôn ngữ ứng dụng",
     avgSale: "Giá trị trung bình",
     bestMarginItem: "Biên lợi nhuận cao nhất",
+    bulkSale: "Bán số lượng lớn",
     bulkRestock: "Nhập hàng số lượng lớn",
     businessHealth: "Sức khỏe kinh doanh",
     cancel: "Hủy",
@@ -285,6 +302,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     exploreFastSalesTitle: "Bán nhanh từ tab Tồn kho",
     exploreFastSalesBody:
       "Nhấn − hoặc + để ghi nhận bán hàng và nhập hàng trong vài giây. Mỗi lần nhấn sẽ cập nhật tồn kho và doanh thu.",
+    exploreBulkSalesTitle: "Nhấn giữ − để bán số lượng lớn",
+    exploreBulkSalesBody:
+      "Bán nhiều cùng lúc? Nhấn giữ − để nhập số lượng và tổng doanh thu, kể cả khi giảm giá.",
     exploreBulkRestockTitle: "Nhấn giữ + để nhập số lượng lớn",
     exploreBulkRestockBody:
       "Khi nhập nhiều cùng lúc, hãy nhấn giữ + để nhập số lượng và tổng chi phí trong một bước.",
@@ -306,7 +326,11 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     historySale: "Đã bán {quantity} {product} · {amount}",
     historyRestock: "Đã nhập {quantity} {product} · {amount}",
     historyAdjustment: "Điều chỉnh {quantity} {product} · {amount}",
-    holdRestock: "Giữ + để nhập hàng số lượng lớn.",
+    holdRestock:
+      "Giữ + để nhập hàng số lượng lớn. Giữ − để bán số lượng lớn.",
+    insufficientStockTitle: "Không đủ tồn kho",
+    insufficientStockBody:
+      "Bạn không thể bán nhiều hơn số lượng hiện có.",
     inventory: "Tồn kho",
     inventoryValue: "Giá trị tồn kho",
     inventoryWatch: "Theo dõi tồn kho",
@@ -331,6 +355,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     profit: "Lợi nhuận",
     productInsights: "Thông tin sản phẩm",
     qtyUnitCost: "số lượng × giá vốn",
+    qtyUnitPrice: "số lượng × giá bán",
     revenue: "Doanh thu",
     restocked: "đã nhập",
     sold: "đã bán",
@@ -341,6 +366,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     stockHealthy: "Tồn kho đang ổn định.",
     topRevenueItem: "Sản phẩm doanh thu cao nhất",
     totalCost: "Tổng chi phí",
+    totalRevenue: "Tổng doanh thu",
     totalSales: "Tổng số bán",
     undo: "Hoàn tác",
     vendors: "Nhà cung cấp",
