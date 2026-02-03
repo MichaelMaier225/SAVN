@@ -104,18 +104,19 @@ export const restockProduct = (id: number) => {
   saveState()
 }
 
-export const wasteProduct = (id: number) => {
+export const removeFromInventory = (id: number, amount: number) => {
   snapshot()
 
-  products = products.map(p =>
-    p.id === id && p.qty > 0
-      ? {
-          ...p,
-          qty: p.qty - 1,
-          expenses: p.expenses + p.cost,
-        }
-      : p
-  )
+  products = products.map(p => {
+    if (p.id !== id || p.qty === 0) return p
+
+    const removal = Math.min(amount, p.qty)
+
+    return {
+      ...p,
+      qty: p.qty - removal,
+    }
+  })
 
   saveState()
 }

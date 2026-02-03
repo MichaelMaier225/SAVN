@@ -13,7 +13,7 @@ import {
   getProducts,
   sellProduct,
   restockProduct,
-  wasteProduct,
+  removeFromInventory,
   undoLastAction,
   Product,
 } from "../../store/products"
@@ -32,9 +32,15 @@ export default function HomeScreen() {
     }, [])
   )
 
+  const handleInventoryRemoval = (id: number, amount: number) => {
+    removeFromInventory(id, amount)
+    setCanUndo(true)
+    refresh()
+  }
+
   const confirmAdjustment = (id: number) => {
     Alert.alert(
-      "Remove item from inventory?",
+      "Remove items from inventory?",
       "This won’t affect profit.",
       [
         {
@@ -42,12 +48,17 @@ export default function HomeScreen() {
           style: "cancel",
         },
         {
-          text: "Confirm",
+          text: "Remove 1",
           style: "destructive",
           onPress: () => {
-            wasteProduct(id)
-            setCanUndo(true)
-            refresh()
+            handleInventoryRemoval(id, 1)
+          },
+        },
+        {
+          text: "Remove 5",
+          style: "destructive",
+          onPress: () => {
+            handleInventoryRemoval(id, 5)
           },
         },
       ]
@@ -134,7 +145,7 @@ export default function HomeScreen() {
         ))}
 
         <Text style={styles.helperText}>
-          Hold − to remove item from inventory
+          Hold − to remove 1 or 5 from inventory
         </Text>
       </View>
     </SafeAreaView>
