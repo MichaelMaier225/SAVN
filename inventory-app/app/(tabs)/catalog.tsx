@@ -112,7 +112,7 @@ export default function CatalogScreen() {
                   <Text style={styles.rowName}>{product.name}</Text>
                   <Text style={styles.rowMeta}>
                     ${product.price.toFixed(2)} price · $
-                    {product.cost.toFixed(2)} cost
+                    {product.cost.toFixed(2)} cost · {product.qty} on hand
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -140,7 +140,7 @@ export default function CatalogScreen() {
                   <Text style={styles.rowName}>{product.name}</Text>
                   <Text style={styles.rowMeta}>
                     ${product.price.toFixed(2)} price · $
-                    {product.cost.toFixed(2)} cost
+                    {product.cost.toFixed(2)} cost · {product.qty} on hand
                   </Text>
                 </View>
                 <TouchableOpacity
