@@ -21,6 +21,7 @@ import {
   Product,
 } from "../../store/products"
 import { useLanguage } from "../../hooks/use-language"
+import { useCurrency } from "../../hooks/use-currency"
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([])
@@ -31,6 +32,9 @@ export default function HomeScreen() {
   const [bulkTotal, setBulkTotal] = useState("")
   const [bulkTotalTouched, setBulkTotalTouched] = useState(false)
   const { t } = useLanguage()
+  const { currency, formatMoney, toDisplayValue, fromDisplayValue } =
+    useCurrency()
+  const displayDecimals = currency === "VND" ? 0 : 2
 
   const refresh = () => {
     setProducts([...getProducts()])
@@ -46,7 +50,9 @@ export default function HomeScreen() {
   const openBulkRestock = (product: Product) => {
     setBulkProduct(product)
     setBulkQty("1")
-    setBulkTotal(product.cost.toFixed(2))
+    setBulkTotal(
+      toDisplayValue(product.cost).toFixed(displayDecimals)
+    )
     setBulkTotalTouched(false)
   }
 
@@ -58,18 +64,25 @@ export default function HomeScreen() {
     if (!bulkProduct) return
     const qtyValue = Number.parseInt(bulkQty, 10)
     const totalValue = Number.parseFloat(bulkTotal)
+    const totalUsd = fromDisplayValue(totalValue)
 
     if (Number.isNaN(qtyValue) || qtyValue <= 0) {
-      Alert.alert("Enter a valid quantity", "Quantity must be at least 1.")
+      Alert.alert(
+        t("enterValidQuantityTitle"),
+        t("enterValidQuantityBody")
+      )
       return
     }
 
     if (Number.isNaN(totalValue) || totalValue < 0) {
-      Alert.alert("Enter a valid total cost", "Total cost must be 0 or more.")
+      Alert.alert(
+        t("enterValidTotalTitle"),
+        t("enterValidTotalBody")
+      )
       return
     }
 
-    restockProductBulk(bulkProduct.id, qtyValue, totalValue)
+    restockProductBulk(bulkProduct.id, qtyValue, totalUsd)
     setCanUndo(true)
     refresh()
     closeBulkRestock()
@@ -84,7 +97,11 @@ export default function HomeScreen() {
       !Number.isNaN(parsedQty) &&
       parsedQty > 0
     ) {
-      setBulkTotal((parsedQty * bulkProduct.cost).toFixed(2))
+      setBulkTotal(
+        toDisplayValue(parsedQty * bulkProduct.cost).toFixed(
+          displayDecimals
+        )
+      )
     }
   }
 
@@ -94,7 +111,7 @@ export default function HomeScreen() {
   }
 
   const parsedBulkQty = Number.parseInt(bulkQty, 10)
-  const estimatedTotal =
+  const estimatedTotalUsd =
     bulkProduct && !Number.isNaN(parsedBulkQty) && parsedBulkQty > 0
       ? parsedBulkQty * bulkProduct.cost
       : 0
@@ -108,13 +125,13 @@ export default function HomeScreen() {
         <Text style={styles.title}>SAVN</Text>
 
         <Text>
-          {t("revenue")}: ${revenue.toFixed(2)}
+          {t("revenue")}: {formatMoney(revenue)}
         </Text>
         <Text>
-          {t("expenses")}: ${expenses.toFixed(2)}
+          {t("expenses")}: {formatMoney(expenses)}
         </Text>
         <Text style={styles.profit}>
-          {t("profit")}: ${(revenue - expenses).toFixed(2)}
+          {t("profit")}: {formatMoney(revenue - expenses)}
         </Text>
 
         {activeProducts.map(p => (
@@ -188,20 +205,21 @@ export default function HomeScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>
-              Bulk restock {bulkProduct?.name}
+              {t("bulkRestock")} {bulkProduct?.name}
             </Text>
-            <Text style={styles.modalLabel}>Quantity</Text>
+            <Text style={styles.modalLabel}>{t("quantity")}</Text>
             <TextInput
               style={styles.modalInput}
               value={bulkQty}
               onChangeText={updateBulkQty}
               keyboardType="number-pad"
-              placeholder="Enter quantity"
+              placeholder={t("enterQuantity")}
             />
             <Text style={styles.modalHint}>
-              Estimated total: ${estimatedTotal.toFixed(2)} (qty × unit cost)
+              {t("estimatedTotal")}: {formatMoney(estimatedTotalUsd)} (
+              {t("qtyUnitCost")})
             </Text>
-            <Text style={styles.modalLabel}>Total cost</Text>
+            <Text style={styles.modalLabel}>{t("totalCost")}</Text>
             <TextInput
               style={styles.modalInput}
               value={bulkTotal}
@@ -214,13 +232,13 @@ export default function HomeScreen() {
                 style={[styles.modalButton, styles.modalCancel]}
                 onPress={closeBulkRestock}
               >
-                <Text style={styles.modalCancelText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>{t("cancel")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalConfirm]}
                 onPress={applyBulkRestock}
               >
-                <Text style={styles.modalConfirmText}>Apply</Text>
+                <Text style={styles.modalConfirmText}>{t("apply")}</Text>
               </TouchableOpacity>
             </View>
           </View>

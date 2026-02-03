@@ -21,6 +21,8 @@ import {
   updateProduct,
   Product,
 } from "../../store/products"
+import { useLanguage } from "../../hooks/use-language"
+import { useCurrency } from "../../hooks/use-currency"
 
 export default function CatalogScreen() {
   const [products, setProducts] = useState<Product[]>([])
@@ -31,6 +33,10 @@ export default function CatalogScreen() {
   const [editingPrice, setEditingPrice] = useState("")
   const [editingCost, setEditingCost] = useState("")
   const [editingInventory, setEditingInventory] = useState("")
+  const { t } = useLanguage()
+  const { currency, formatMoney, toDisplayValue, fromDisplayValue } =
+    useCurrency()
+  const displayDecimals = currency === "VND" ? 0 : 2
 
   const refresh = () => {
     setProducts([...getProducts()])
@@ -44,24 +50,26 @@ export default function CatalogScreen() {
 
   const handleAdd = () => {
     if (!name.trim()) {
-      Alert.alert("Missing name", "Enter a product name.")
+      Alert.alert(t("missingNameTitle"), t("missingNameBody"))
       return
     }
 
     const priceValue = Number.parseFloat(price)
     const costValue = Number.parseFloat(cost)
+    const priceUsd = fromDisplayValue(priceValue)
+    const costUsd = fromDisplayValue(costValue)
 
     if (Number.isNaN(priceValue) || priceValue < 0) {
-      Alert.alert("Invalid price", "Enter a valid price.")
+      Alert.alert(t("invalidPriceTitle"), t("invalidPriceBody"))
       return
     }
 
     if (Number.isNaN(costValue) || costValue < 0) {
-      Alert.alert("Invalid cost", "Enter a valid cost.")
+      Alert.alert(t("invalidCostTitle"), t("invalidCostBody"))
       return
     }
 
-    addCatalogProduct(name.trim(), priceValue, costValue)
+    addCatalogProduct(name.trim(), priceUsd, costUsd)
     setName("")
     setPrice("")
     setCost("")
@@ -70,8 +78,12 @@ export default function CatalogScreen() {
 
   const openEdit = (product: Product) => {
     setEditingProduct(product)
-    setEditingPrice(product.price.toFixed(2))
-    setEditingCost(product.cost.toFixed(2))
+    setEditingPrice(
+      toDisplayValue(product.price).toFixed(displayDecimals)
+    )
+    setEditingCost(
+      toDisplayValue(product.cost).toFixed(displayDecimals)
+    )
     setEditingInventory(String(product.qty))
   }
 
@@ -85,26 +97,31 @@ export default function CatalogScreen() {
     const priceValue = Number.parseFloat(editingPrice)
     const costValue = Number.parseFloat(editingCost)
     const inventoryValue = Number.parseInt(editingInventory, 10)
+    const priceUsd = fromDisplayValue(priceValue)
+    const costUsd = fromDisplayValue(costValue)
 
     if (Number.isNaN(priceValue) || priceValue < 0) {
-      Alert.alert("Invalid price", "Enter a valid price.")
+      Alert.alert(t("invalidPriceTitle"), t("invalidPriceBody"))
       return
     }
 
     if (Number.isNaN(costValue) || costValue < 0) {
-      Alert.alert("Invalid cost", "Enter a valid cost.")
+      Alert.alert(t("invalidCostTitle"), t("invalidCostBody"))
       return
     }
 
     if (Number.isNaN(inventoryValue) || inventoryValue < 0) {
-      Alert.alert("Invalid inventory", "Enter a valid inventory count.")
+      Alert.alert(
+        t("invalidInventoryTitle"),
+        t("invalidInventoryBody")
+      )
       return
     }
 
     updateProduct(editingProduct.id, {
       name: editingProduct.name,
-      price: priceValue,
-      cost: costValue,
+      price: priceUsd,
+      cost: costUsd,
     })
     setProductInventory(editingProduct.id, inventoryValue)
     refresh()
@@ -113,12 +130,12 @@ export default function CatalogScreen() {
 
   const handleDelete = (product: Product) => {
     Alert.alert(
-      "Archive product?",
-      `This will hide ${product.name} from your catalog without changing revenue or expenses.`,
+      t("archiveProductTitle"),
+      t("archiveProductBody").replace("{name}", product.name),
       [
-        { text: "Cancel", style: "cancel" },
+        { text: t("cancel"), style: "cancel" },
         {
-          text: "Archive",
+          text: t("archive"),
           style: "destructive",
           onPress: () => {
             removeProduct(product.id)
@@ -136,53 +153,54 @@ export default function CatalogScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Vendor Catalog</Text>
+        <Text style={styles.title}>{t("vendorCatalogTitle")}</Text>
         <Text style={styles.subtitle}>
-          Add or remove products without affecting revenue or expenses.
+          {t("vendorCatalogSubtitle")}
         </Text>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>New product</Text>
+          <Text style={styles.sectionTitle}>{t("newProduct")}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Product name"
+            placeholder={t("productName")}
             value={name}
             onChangeText={setName}
           />
           <TextInput
             style={styles.input}
-            placeholder="Price per unit"
+            placeholder={t("pricePerUnit")}
             value={price}
             onChangeText={setPrice}
             keyboardType="decimal-pad"
           />
           <TextInput
             style={styles.input}
-            placeholder="Cost per unit"
+            placeholder={t("costPerUnit")}
             value={cost}
             onChangeText={setCost}
             keyboardType="decimal-pad"
           />
           <Text style={styles.helper}>
-            Catalog items start with zero inventory and no expenses.
+            {t("catalogHelper")}
           </Text>
           <TouchableOpacity style={styles.button} onPress={handleAdd}>
-            <Text style={styles.buttonText}>ADD TO CATALOG</Text>
+            <Text style={styles.buttonText}>{t("addToCatalog")}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Active products</Text>
+          <Text style={styles.sectionTitle}>{t("activeProducts")}</Text>
           {activeProducts.length === 0 ? (
-            <Text style={styles.emptyText}>No active products.</Text>
+            <Text style={styles.emptyText}>{t("noActiveProducts")}</Text>
           ) : (
             activeProducts.map(product => (
               <View key={product.id} style={styles.row}>
                 <View style={styles.rowInfo}>
                   <Text style={styles.rowName}>{product.name}</Text>
                   <Text style={styles.rowMeta}>
-                    ${product.price.toFixed(2)} price · $
-                    {product.cost.toFixed(2)} cost · {product.qty} on hand
+                    {formatMoney(product.price)} {t("pricePerUnit")} ·{" "}
+                    {formatMoney(product.cost)} {t("costPerUnit")} ·{" "}
+                    {product.qty} {t("onHand")}
                   </Text>
                 </View>
                 <View style={styles.rowActions}>
@@ -191,7 +209,7 @@ export default function CatalogScreen() {
                     onPress={() => openEdit(product)}
                   >
                     <Text style={[styles.actionText, styles.actionTextLight]}>
-                      Edit
+                      {t("edit")}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -201,7 +219,7 @@ export default function CatalogScreen() {
                       refresh()
                     }}
                   >
-                    <Text style={styles.actionText}>Deactivate</Text>
+                    <Text style={styles.actionText}>{t("deactivate")}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -210,17 +228,18 @@ export default function CatalogScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Inactive products</Text>
+          <Text style={styles.sectionTitle}>{t("inactiveProducts")}</Text>
           {inactiveProducts.length === 0 ? (
-            <Text style={styles.emptyText}>No inactive products.</Text>
+            <Text style={styles.emptyText}>{t("noInactiveProducts")}</Text>
           ) : (
             inactiveProducts.map(product => (
               <View key={product.id} style={styles.row}>
                 <View style={styles.rowInfo}>
                   <Text style={styles.rowName}>{product.name}</Text>
                   <Text style={styles.rowMeta}>
-                    ${product.price.toFixed(2)} price · $
-                    {product.cost.toFixed(2)} cost · {product.qty} on hand
+                    {formatMoney(product.price)} {t("pricePerUnit")} ·{" "}
+                    {formatMoney(product.cost)} {t("costPerUnit")} ·{" "}
+                    {product.qty} {t("onHand")}
                   </Text>
                 </View>
                 <View style={styles.rowActions}>
@@ -232,14 +251,14 @@ export default function CatalogScreen() {
                     }}
                   >
                     <Text style={[styles.actionText, styles.actionTextLight]}>
-                      Activate
+                      {t("activate")}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.actionButton, styles.deleteButton]}
                     onPress={() => handleDelete(product)}
                   >
-                    <Text style={styles.actionText}>Archive</Text>
+                    <Text style={styles.actionText}>{t("archive")}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -257,9 +276,9 @@ export default function CatalogScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>
-              Update {editingProduct?.name}
+              {t("updateProduct")} {editingProduct?.name}
             </Text>
-            <Text style={styles.modalLabel}>Price per unit</Text>
+            <Text style={styles.modalLabel}>{t("pricePerUnit")}</Text>
             <TextInput
               style={styles.modalInput}
               value={editingPrice}
@@ -267,7 +286,7 @@ export default function CatalogScreen() {
               keyboardType="decimal-pad"
               placeholder="0.00"
             />
-            <Text style={styles.modalLabel}>Cost per unit</Text>
+            <Text style={styles.modalLabel}>{t("costPerUnit")}</Text>
             <TextInput
               style={styles.modalInput}
               value={editingCost}
@@ -275,7 +294,7 @@ export default function CatalogScreen() {
               keyboardType="decimal-pad"
               placeholder="0.00"
             />
-            <Text style={styles.modalLabel}>Inventory on hand</Text>
+            <Text style={styles.modalLabel}>{t("inventoryOnHand")}</Text>
             <TextInput
               style={styles.modalInput}
               value={editingInventory}
@@ -284,20 +303,20 @@ export default function CatalogScreen() {
               placeholder="0"
             />
             <Text style={styles.modalHint}>
-              Inventory changes do not affect revenue or expenses.
+              {t("inventoryHint")}
             </Text>
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalCancel]}
                 onPress={closeEdit}
               >
-                <Text style={styles.modalCancelText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>{t("cancel")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalConfirm]}
                 onPress={handleEditSave}
               >
-                <Text style={styles.modalConfirmText}>Save</Text>
+                <Text style={styles.modalConfirmText}>{t("save")}</Text>
               </TouchableOpacity>
             </View>
           </View>
