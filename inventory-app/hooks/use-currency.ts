@@ -3,18 +3,14 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Currency,
   getCurrency,
-  getUsdToVndRate,
   setCurrency,
-  setUsdToVndRate,
   subscribeToCurrency,
-  subscribeToUsdToVndRate,
 } from "../store/settings"
 
 type MoneyFormatter = (value: number) => string
 
 const createFormatter = (
-  currency: Currency,
-  usdToVndRate: number
+  currency: Currency
 ): MoneyFormatter => {
   const locale = currency === "VND" ? "vi-VN" : "en-US"
   const format = new Intl.NumberFormat(locale, {
@@ -24,9 +20,7 @@ const createFormatter = (
   })
 
   return (value: number) => {
-    const displayValue =
-      currency === "VND" ? value * usdToVndRate : value
-    return format.format(displayValue)
+    return format.format(value)
   }
 }
 
@@ -34,26 +28,19 @@ export const useCurrency = () => {
   const [currency, setCurrencyState] = useState<Currency>(
     getCurrency()
   )
-  const [usdToVndRate, setUsdToVndRateState] = useState<number>(
-    getUsdToVndRate()
-  )
 
   useEffect(() => {
     const unsubscribeCurrency = subscribeToCurrency(next => {
       setCurrencyState(next)
     })
-    const unsubscribeRate = subscribeToUsdToVndRate(next => {
-      setUsdToVndRateState(next)
-    })
     return () => {
       unsubscribeCurrency()
-      unsubscribeRate()
     }
   }, [])
 
   const formatter = useMemo(
-    () => createFormatter(currency, usdToVndRate),
-    [currency, usdToVndRate]
+    () => createFormatter(currency),
+    [currency]
   )
 
   const formatMoney = useCallback(
@@ -62,15 +49,13 @@ export const useCurrency = () => {
   )
 
   const toDisplayValue = useCallback(
-    (value: number) =>
-      currency === "VND" ? value * usdToVndRate : value,
-    [currency, usdToVndRate]
+    (value: number) => value,
+    []
   )
 
   const fromDisplayValue = useCallback(
-    (value: number) =>
-      currency === "VND" ? value / usdToVndRate : value,
-    [currency, usdToVndRate]
+    (value: number) => value,
+    []
   )
 
   const updateCurrency = useCallback(
@@ -80,28 +65,20 @@ export const useCurrency = () => {
     []
   )
 
-  const updateUsdToVndRate = useCallback((next: number) => {
-    setUsdToVndRate(next)
-  }, [])
-
   return useMemo(
     () => ({
       currency,
-      usdToVndRate,
       formatMoney,
       toDisplayValue,
       fromDisplayValue,
       setCurrency: updateCurrency,
-      setUsdToVndRate: updateUsdToVndRate,
     }),
     [
       currency,
-      usdToVndRate,
       formatMoney,
       toDisplayValue,
       fromDisplayValue,
       updateCurrency,
-      updateUsdToVndRate,
     ]
   )
 }

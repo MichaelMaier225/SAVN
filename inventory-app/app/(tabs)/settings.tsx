@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  TextInput,
 } from "react-native"
 
 import { useLanguage } from "../../hooks/use-language"
@@ -32,19 +31,7 @@ const languageOptions: Array<{
 export default function SettingsScreen() {
   const { language, setLanguage, t } = useLanguage()
   const [updating, setUpdating] = useState<Language | null>(null)
-  const {
-    currency,
-    setCurrency,
-    usdToVndRate,
-    setUsdToVndRate,
-  } = useCurrency()
-  const [rateInput, setRateInput] = useState(
-    usdToVndRate.toString()
-  )
-
-  useEffect(() => {
-    setRateInput(usdToVndRate.toString())
-  }, [usdToVndRate])
+  const { currency, setCurrency } = useCurrency()
 
   const handleSelect = async (next: Language) => {
     setUpdating(next)
@@ -59,14 +46,6 @@ export default function SettingsScreen() {
     { value: "USD", label: t("currencyUSD") },
     { value: "VND", label: t("currencyVND") },
   ]
-
-  const handleRateChange = (value: string) => {
-    setRateInput(value)
-    const parsed = Number.parseFloat(value)
-    if (!Number.isNaN(parsed) && parsed > 0) {
-      setUsdToVndRate(parsed)
-    }
-  }
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -126,23 +105,6 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             )
           })}
-          {currency === "VND" ? (
-            <View style={styles.rateSection}>
-              <Text style={styles.rateLabel}>
-                {t("vndRateLabel")}
-              </Text>
-              <TextInput
-                style={styles.rateInput}
-                value={rateInput}
-                onChangeText={handleRateChange}
-                keyboardType="decimal-pad"
-                placeholder="24500"
-              />
-              <Text style={styles.rateHelper}>
-                {t("vndRateHelper")}
-              </Text>
-            </View>
-          ) : null}
         </View>
       </View>
     </SafeAreaView>
@@ -217,29 +179,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#777",
     marginBottom: 12,
-  },
-  rateSection: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
-  },
-  rateLabel: {
-    fontSize: 13,
-    color: "#555",
-    marginBottom: 6,
-  },
-  rateInput: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    fontSize: 15,
-    marginBottom: 6,
-  },
-  rateHelper: {
-    fontSize: 12,
-    color: "#666",
   },
 })
