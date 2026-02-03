@@ -113,12 +113,12 @@ export default function CatalogScreen() {
 
   const handleDelete = (product: Product) => {
     Alert.alert(
-      "Delete product?",
-      `This will permanently remove ${product.name} from your catalog.`,
+      "Archive product?",
+      `This will hide ${product.name} from your catalog without changing revenue or expenses.`,
       [
         { text: "Cancel", style: "cancel" },
         {
-          text: "Delete",
+          text: "Archive",
           style: "destructive",
           onPress: () => {
             removeProduct(product.id)
@@ -129,8 +129,9 @@ export default function CatalogScreen() {
     )
   }
 
-  const activeProducts = products.filter(p => p.isActive)
-  const inactiveProducts = products.filter(p => !p.isActive)
+  const visibleProducts = products.filter(p => !p.isArchived)
+  const activeProducts = visibleProducts.filter(p => p.isActive)
+  const inactiveProducts = visibleProducts.filter(p => !p.isActive)
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -238,7 +239,7 @@ export default function CatalogScreen() {
                     style={[styles.actionButton, styles.deleteButton]}
                     onPress={() => handleDelete(product)}
                   >
-                    <Text style={styles.actionText}>Delete</Text>
+                    <Text style={styles.actionText}>Archive</Text>
                   </TouchableOpacity>
                 </View>
               </View>

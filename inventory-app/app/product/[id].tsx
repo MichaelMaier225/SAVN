@@ -135,12 +135,12 @@ export default function ProductEditScreen() {
           style={styles.deleteBtn}
           onPress={() =>
             Alert.alert(
-              "Delete product",
-              "This will permanently remove this product and its history.",
+              "Archive product",
+              "This hides this product without changing revenue or expenses.",
               [
                 { text: "Cancel", style: "cancel" },
                 {
-                  text: "Delete",
+                  text: "Archive",
                   style: "destructive",
                   onPress: () => {
                     removeProduct(product.id)
@@ -151,7 +151,7 @@ export default function ProductEditScreen() {
             )
           }
         >
-          <Text style={styles.deleteText}>Delete product</Text>
+          <Text style={styles.deleteText}>Archive product</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
