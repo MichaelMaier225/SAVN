@@ -6,6 +6,8 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  Modal,
+  TextInput,
 } from "react-native"
 import { router, useFocusEffect } from "expo-router"
 
@@ -13,6 +15,7 @@ import {
   getProducts,
   sellProduct,
   restockProduct,
+  restockProductBulk,
   wasteProduct,
   undoLastAction,
   Product,
@@ -21,6 +24,10 @@ import {
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([])
   const [canUndo, setCanUndo] = useState(false)
+  const [bulkProduct, setBulkProduct] = useState<Product | null>(null)
+  const [bulkQty, setBulkQty] = useState("1")
+  const [bulkTotal, setBulkTotal] = useState("")
+  const [bulkTotalTouched, setBulkTotalTouched] = useState(false)
 
   const refresh = () => {
     setProducts([...getProducts()])
@@ -53,6 +60,62 @@ export default function HomeScreen() {
       ]
     )
   }
+
+  const openBulkRestock = (product: Product) => {
+    setBulkProduct(product)
+    setBulkQty("1")
+    setBulkTotal(product.cost.toFixed(2))
+    setBulkTotalTouched(false)
+  }
+
+  const closeBulkRestock = () => {
+    setBulkProduct(null)
+  }
+
+  const applyBulkRestock = () => {
+    if (!bulkProduct) return
+    const qtyValue = Number.parseInt(bulkQty, 10)
+    const totalValue = Number.parseFloat(bulkTotal)
+
+    if (Number.isNaN(qtyValue) || qtyValue <= 0) {
+      Alert.alert("Enter a valid quantity", "Quantity must be at least 1.")
+      return
+    }
+
+    if (Number.isNaN(totalValue) || totalValue < 0) {
+      Alert.alert("Enter a valid total cost", "Total cost must be 0 or more.")
+      return
+    }
+
+    restockProductBulk(bulkProduct.id, qtyValue, totalValue)
+    setCanUndo(true)
+    refresh()
+    closeBulkRestock()
+  }
+
+  const updateBulkQty = (value: string) => {
+    setBulkQty(value)
+    const parsedQty = Number.parseInt(value, 10)
+    if (
+      bulkProduct &&
+      !bulkTotalTouched &&
+      !Number.isNaN(parsedQty) &&
+      parsedQty > 0
+    ) {
+      setBulkTotal((parsedQty * bulkProduct.cost).toFixed(2))
+    }
+  }
+
+  const updateBulkTotal = (value: string) => {
+    setBulkTotal(value)
+    setBulkTotalTouched(true)
+  }
+
+  const parsedBulkQty = Number.parseInt(bulkQty, 10)
+  const estimatedTotal =
+    bulkProduct && !Number.isNaN(parsedBulkQty) && parsedBulkQty > 0
+      ? parsedBulkQty * bulkProduct.cost
+      : 0
 
   const revenue = products.reduce((sum, p) => sum + p.revenue, 0)
   const expenses = products.reduce((sum, p) => sum + p.expenses, 0)
@@ -104,6 +167,7 @@ export default function HomeScreen() {
                   setCanUndo(true)
                   refresh()
                 }}
+                onLongPress={() => openBulkRestock(p)}
               >
                 <Text style={styles.btnText}>+</Text>
               </TouchableOpacity>
@@ -134,9 +198,57 @@ export default function HomeScreen() {
         ))}
 
         <Text style={styles.helperText}>
-          Hold − to remove item from inventory
+          Hold − to remove item from inventory. Hold + to restock in bulk.
         </Text>
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={!!bulkProduct}
+        onRequestClose={closeBulkRestock}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>
+              Bulk restock {bulkProduct?.name}
+            </Text>
+            <Text style={styles.modalLabel}>Quantity</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={bulkQty}
+              onChangeText={updateBulkQty}
+              keyboardType="number-pad"
+              placeholder="Enter quantity"
+            />
+            <Text style={styles.modalHint}>
+              Estimated total: ${estimatedTotal.toFixed(2)} (qty × unit cost)
+            </Text>
+            <Text style={styles.modalLabel}>Total cost</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={bulkTotal}
+              onChangeText={updateBulkTotal}
+              keyboardType="decimal-pad"
+              placeholder="0.00"
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancel]}
+                onPress={closeBulkRestock}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirm]}
+                onPress={applyBulkRestock}
+              >
+                <Text style={styles.modalConfirmText}>Apply</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -218,5 +330,69 @@ const styles = StyleSheet.create({
     color: "#888",
     fontSize: 13,
     paddingTop: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalCard: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  modalLabel: {
+    fontSize: 14,
+    marginBottom: 6,
+    color: "#555",
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  modalHint: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 12,
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalCancel: {
+    backgroundColor: "#f2f2f2",
+    marginRight: 10,
+  },
+  modalConfirm: {
+    backgroundColor: "#000",
+    marginLeft: 10,
+  },
+  modalCancelText: {
+    color: "#333",
+    fontWeight: "600",
+  },
+  modalConfirmText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 })
