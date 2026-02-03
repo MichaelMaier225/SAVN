@@ -15,6 +15,7 @@ import { useFocusEffect } from "expo-router"
 import {
   addCatalogProduct,
   getProducts,
+  removeProduct,
   setProductActive,
   setProductInventory,
   updateProduct,
@@ -110,6 +111,24 @@ export default function CatalogScreen() {
     closeEdit()
   }
 
+  const handleDelete = (product: Product) => {
+    Alert.alert(
+      "Delete product?",
+      `This will permanently remove ${product.name} from your catalog.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            removeProduct(product.id)
+            refresh()
+          },
+        },
+      ]
+    )
+  }
+
   const activeProducts = products.filter(p => p.isActive)
   const inactiveProducts = products.filter(p => !p.isActive)
 
@@ -203,17 +222,25 @@ export default function CatalogScreen() {
                     {product.cost.toFixed(2)} cost · {product.qty} on hand
                   </Text>
                 </View>
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.activateButton]}
-                  onPress={() => {
-                    setProductActive(product.id, true)
-                    refresh()
-                  }}
-                >
-                  <Text style={[styles.actionText, styles.actionTextLight]}>
-                    Activate
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.rowActions}>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.activateButton]}
+                    onPress={() => {
+                      setProductActive(product.id, true)
+                      refresh()
+                    }}
+                  >
+                    <Text style={[styles.actionText, styles.actionTextLight]}>
+                      Activate
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.deleteButton]}
+                    onPress={() => handleDelete(product)}
+                  >
+                    <Text style={styles.actionText}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             ))
           )}
@@ -372,6 +399,9 @@ const styles = StyleSheet.create({
   },
   activateButton: {
     backgroundColor: "#000",
+  },
+  deleteButton: {
+    backgroundColor: "#f2f2f2",
   },
   actionText: {
     fontSize: 12,
