@@ -104,6 +104,28 @@ export const restockProduct = (id: number) => {
   saveState()
 }
 
+export const restockProductBulk = (
+  id: number,
+  qtyToAdd: number,
+  totalCost: number
+) => {
+  if (qtyToAdd <= 0 || totalCost < 0) return
+
+  snapshot()
+
+  products = products.map(p =>
+    p.id === id
+      ? {
+          ...p,
+          qty: p.qty + qtyToAdd,
+          expenses: p.expenses + totalCost,
+        }
+      : p
+  )
+
+  saveState()
+}
+
 export const wasteProduct = (id: number) => {
   snapshot()
 
