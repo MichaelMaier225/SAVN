@@ -83,8 +83,6 @@ type TranslationKey =
   | "totalSales"
   | "undo"
   | "vendors"
-  | "vndRateHelper"
-  | "vndRateLabel"
   | "currencyUSD"
   | "currencyVND"
   | "activeItems"
@@ -134,7 +132,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     changeLanguageHelper:
       "Switch languages for labels across the app.",
     currency: "Currency",
-    currencyHelper: "Choose how money is displayed.",
+    currencyHelper: "Choose the currency symbol for prices.",
     daysTracked: "Days tracked",
     enterQuantity: "Enter quantity",
     enterValidQuantityTitle: "Enter a valid quantity",
@@ -208,8 +206,6 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     totalSales: "Total sales",
     undo: "Undo",
     vendors: "Vendors",
-    vndRateHelper: "Set the exchange rate for USD → VND.",
-    vndRateLabel: "USD → VND rate",
     currencyUSD: "US dollar (USD)",
     currencyVND: "Vietnamese dong (VND)",
     activeItems: "Active items",
@@ -262,7 +258,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     changeLanguageHelper:
       "Đổi ngôn ngữ cho các nhãn trên toàn ứng dụng.",
     currency: "Tiền tệ",
-    currencyHelper: "Chọn cách hiển thị tiền.",
+    currencyHelper: "Chọn ký hiệu tiền tệ cho giá.",
     daysTracked: "Số ngày theo dõi",
     enterQuantity: "Nhập số lượng",
     enterValidQuantityTitle: "Nhập số lượng hợp lệ",
@@ -336,8 +332,6 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     totalSales: "Tổng số bán",
     undo: "Hoàn tác",
     vendors: "Nhà cung cấp",
-    vndRateHelper: "Cập nhật tỷ giá USD → VND.",
-    vndRateLabel: "Tỷ giá USD → VND",
     currencyUSD: "Đô la Mỹ (USD)",
     currencyVND: "Việt Nam đồng (VND)",
     activeItems: "Mặt hàng đang bán",
