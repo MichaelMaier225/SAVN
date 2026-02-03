@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Modal,
 } from "react-native"
 import { useFocusEffect } from "expo-router"
 
@@ -15,6 +16,8 @@ import {
   addCatalogProduct,
   getProducts,
   setProductActive,
+  setProductInventory,
+  updateProduct,
   Product,
 } from "../../store/products"
 
@@ -23,6 +26,10 @@ export default function CatalogScreen() {
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [cost, setCost] = useState("")
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [editingPrice, setEditingPrice] = useState("")
+  const [editingCost, setEditingCost] = useState("")
+  const [editingInventory, setEditingInventory] = useState("")
 
   const refresh = () => {
     setProducts([...getProducts()])
@@ -58,6 +65,49 @@ export default function CatalogScreen() {
     setPrice("")
     setCost("")
     refresh()
+  }
+
+  const openEdit = (product: Product) => {
+    setEditingProduct(product)
+    setEditingPrice(product.price.toFixed(2))
+    setEditingCost(product.cost.toFixed(2))
+    setEditingInventory(String(product.qty))
+  }
+
+  const closeEdit = () => {
+    setEditingProduct(null)
+  }
+
+  const handleEditSave = () => {
+    if (!editingProduct) return
+
+    const priceValue = Number.parseFloat(editingPrice)
+    const costValue = Number.parseFloat(editingCost)
+    const inventoryValue = Number.parseInt(editingInventory, 10)
+
+    if (Number.isNaN(priceValue) || priceValue < 0) {
+      Alert.alert("Invalid price", "Enter a valid price.")
+      return
+    }
+
+    if (Number.isNaN(costValue) || costValue < 0) {
+      Alert.alert("Invalid cost", "Enter a valid cost.")
+      return
+    }
+
+    if (Number.isNaN(inventoryValue) || inventoryValue < 0) {
+      Alert.alert("Invalid inventory", "Enter a valid inventory count.")
+      return
+    }
+
+    updateProduct(editingProduct.id, {
+      name: editingProduct.name,
+      price: priceValue,
+      cost: costValue,
+    })
+    setProductInventory(editingProduct.id, inventoryValue)
+    refresh()
+    closeEdit()
   }
 
   const activeProducts = products.filter(p => p.isActive)
@@ -115,15 +165,25 @@ export default function CatalogScreen() {
                     {product.cost.toFixed(2)} cost · {product.qty} on hand
                   </Text>
                 </View>
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.deactivateButton]}
-                  onPress={() => {
-                    setProductActive(product.id, false)
-                    refresh()
-                  }}
-                >
-                  <Text style={styles.actionText}>Deactivate</Text>
-                </TouchableOpacity>
+                <View style={styles.rowActions}>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.editButton]}
+                    onPress={() => openEdit(product)}
+                  >
+                    <Text style={[styles.actionText, styles.actionTextLight]}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.deactivateButton]}
+                    onPress={() => {
+                      setProductActive(product.id, false)
+                      refresh()
+                    }}
+                  >
+                    <Text style={styles.actionText}>Deactivate</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             ))
           )}
@@ -159,6 +219,62 @@ export default function CatalogScreen() {
           )}
         </View>
       </ScrollView>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={!!editingProduct}
+        onRequestClose={closeEdit}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>
+              Update {editingProduct?.name}
+            </Text>
+            <Text style={styles.modalLabel}>Price per unit</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={editingPrice}
+              onChangeText={setEditingPrice}
+              keyboardType="decimal-pad"
+              placeholder="0.00"
+            />
+            <Text style={styles.modalLabel}>Cost per unit</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={editingCost}
+              onChangeText={setEditingCost}
+              keyboardType="decimal-pad"
+              placeholder="0.00"
+            />
+            <Text style={styles.modalLabel}>Inventory on hand</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={editingInventory}
+              onChangeText={setEditingInventory}
+              keyboardType="number-pad"
+              placeholder="0"
+            />
+            <Text style={styles.modalHint}>
+              Inventory changes do not affect revenue or expenses.
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancel]}
+                onPress={closeEdit}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirm]}
+                onPress={handleEditSave}
+              >
+                <Text style={styles.modalConfirmText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -230,6 +346,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 12,
   },
+  rowActions: {
+    flexDirection: "row",
+    gap: 8,
+  },
   rowName: {
     fontSize: 16,
     fontWeight: "600",
@@ -247,6 +367,9 @@ const styles = StyleSheet.create({
   deactivateButton: {
     backgroundColor: "#f2f2f2",
   },
+  editButton: {
+    backgroundColor: "#111",
+  },
   activateButton: {
     backgroundColor: "#000",
   },
@@ -261,5 +384,69 @@ const styles = StyleSheet.create({
   emptyText: {
     color: "#888",
     fontSize: 13,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalCard: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  modalLabel: {
+    fontSize: 14,
+    marginBottom: 6,
+    color: "#555",
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  modalHint: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 12,
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalCancel: {
+    backgroundColor: "#f2f2f2",
+    marginRight: 10,
+  },
+  modalConfirm: {
+    backgroundColor: "#000",
+    marginLeft: 10,
+  },
+  modalCancelText: {
+    color: "#333",
+    fontWeight: "600",
+  },
+  modalConfirmText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 })

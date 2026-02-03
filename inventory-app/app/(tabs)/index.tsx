@@ -9,7 +9,7 @@ import {
   Modal,
   TextInput,
 } from "react-native"
-import { router, useFocusEffect } from "expo-router"
+import { useFocusEffect } from "expo-router"
 
 import {
   getProducts,
@@ -144,17 +144,9 @@ export default function HomeScreen() {
 
         {activeProducts.map(p => (
           <View key={p.id} style={styles.row}>
-            <TouchableOpacity
-              style={styles.nameWrap}
-              onPress={() =>
-                router.push({
-                  pathname: "/product/[id]",
-                  params: { id: String(p.id) },
-                })
-              }
-            >
+            <View style={styles.nameWrap}>
               <Text style={styles.name}>{p.name}</Text>
-            </TouchableOpacity>
+            </View>
 
             <View style={styles.controls}>
               <TouchableOpacity
