@@ -16,7 +16,7 @@ import {
   sellProduct,
   restockProduct,
   restockProductBulk,
-  wasteProduct,
+  wasteProductBulk,
   undoLastAction,
   Product,
 } from "../../store/products"
@@ -28,6 +28,8 @@ export default function HomeScreen() {
   const [bulkQty, setBulkQty] = useState("1")
   const [bulkTotal, setBulkTotal] = useState("")
   const [bulkTotalTouched, setBulkTotalTouched] = useState(false)
+  const [bulkWasteProduct, setBulkWasteProduct] = useState<Product | null>(null)
+  const [bulkWasteQty, setBulkWasteQty] = useState("1")
 
   const refresh = () => {
     setProducts([...getProducts()])
@@ -39,28 +41,6 @@ export default function HomeScreen() {
     }, [])
   )
 
-  const confirmAdjustment = (id: number) => {
-    Alert.alert(
-      "Remove item from inventory?",
-      "This won’t affect profit.",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Confirm",
-          style: "destructive",
-          onPress: () => {
-            wasteProduct(id)
-            setCanUndo(true)
-            refresh()
-          },
-        },
-      ]
-    )
-  }
-
   const openBulkRestock = (product: Product) => {
     setBulkProduct(product)
     setBulkQty("1")
@@ -70,6 +50,15 @@ export default function HomeScreen() {
 
   const closeBulkRestock = () => {
     setBulkProduct(null)
+  }
+
+  const openBulkWaste = (product: Product) => {
+    setBulkWasteProduct(product)
+    setBulkWasteQty("1")
+  }
+
+  const closeBulkWaste = () => {
+    setBulkWasteProduct(null)
   }
 
   const applyBulkRestock = () => {
@@ -93,6 +82,21 @@ export default function HomeScreen() {
     closeBulkRestock()
   }
 
+  const applyBulkWaste = () => {
+    if (!bulkWasteProduct) return
+    const qtyValue = Number.parseInt(bulkWasteQty, 10)
+
+    if (Number.isNaN(qtyValue) || qtyValue <= 0) {
+      Alert.alert("Enter a valid quantity", "Quantity must be at least 1.")
+      return
+    }
+
+    wasteProductBulk(bulkWasteProduct.id, qtyValue)
+    setCanUndo(true)
+    refresh()
+    closeBulkWaste()
+  }
+
   const updateBulkQty = (value: string) => {
     setBulkQty(value)
     const parsedQty = Number.parseInt(value, 10)
@@ -109,6 +113,10 @@ export default function HomeScreen() {
   const updateBulkTotal = (value: string) => {
     setBulkTotal(value)
     setBulkTotalTouched(true)
+  }
+
+  const updateBulkWasteQty = (value: string) => {
+    setBulkWasteQty(value)
   }
 
   const parsedBulkQty = Number.parseInt(bulkQty, 10)
@@ -153,7 +161,7 @@ export default function HomeScreen() {
                   setCanUndo(true)
                   refresh()
                 }}
-                onLongPress={() => confirmAdjustment(p.id)}
+                onLongPress={() => openBulkWaste(p)}
               >
                 <Text style={styles.btnText}>−</Text>
               </TouchableOpacity>
@@ -198,7 +206,7 @@ export default function HomeScreen() {
         ))}
 
         <Text style={styles.helperText}>
-          Hold − to remove item from inventory. Hold + to restock in bulk.
+          Hold − to remove inventory in bulk. Hold + to restock in bulk.
         </Text>
       </View>
 
@@ -242,6 +250,46 @@ export default function HomeScreen() {
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalConfirm]}
                 onPress={applyBulkRestock}
+              >
+                <Text style={styles.modalConfirmText}>Apply</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={!!bulkWasteProduct}
+        onRequestClose={closeBulkWaste}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>
+              Bulk remove {bulkWasteProduct?.name}
+            </Text>
+            <Text style={styles.modalLabel}>Quantity</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={bulkWasteQty}
+              onChangeText={updateBulkWasteQty}
+              keyboardType="number-pad"
+              placeholder="Enter quantity"
+            />
+            <Text style={styles.modalHint}>
+              Removed inventory does not change revenue or expenses.
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancel]}
+                onPress={closeBulkWaste}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirm]}
+                onPress={applyBulkWaste}
               >
                 <Text style={styles.modalConfirmText}>Apply</Text>
               </TouchableOpacity>
