@@ -1,0 +1,140 @@
+import { useState } from "react"
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native"
+
+import { useLanguage } from "../../hooks/use-language"
+import { Language } from "../../store/settings"
+
+const languageOptions: Array<{
+  value: Language
+  label: string
+  detail: string
+}> = [
+  {
+    value: "vi",
+    label: "Tiếng Việt",
+    detail: "Ngôn ngữ mặc định",
+  },
+  {
+    value: "en",
+    label: "English",
+    detail: "English labels",
+  },
+]
+
+export default function SettingsScreen() {
+  const { language, setLanguage, t } = useLanguage()
+  const [updating, setUpdating] = useState<Language | null>(null)
+
+  const handleSelect = async (next: Language) => {
+    setUpdating(next)
+    await setLanguage(next)
+    setUpdating(null)
+  }
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <Text style={styles.title}>{t("settingsTitle")}</Text>
+        <Text style={styles.subtitle}>{t("changeLanguageHelper")}</Text>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>{t("appLanguage")}</Text>
+          {languageOptions.map(option => {
+            const isActive = language === option.value
+            return (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.optionRow,
+                  isActive && styles.optionRowActive,
+                ]}
+                onPress={() => handleSelect(option.value)}
+              >
+                <View style={styles.optionText}>
+                  <Text style={styles.optionLabel}>{option.label}</Text>
+                  <Text style={styles.optionDetail}>{option.detail}</Text>
+                </View>
+                <Text style={styles.optionStatus}>
+                  {isActive
+                    ? "✓"
+                    : updating === option.value
+                    ? "…"
+                    : ""}
+                </Text>
+              </TouchableOpacity>
+            )
+          })}
+        </View>
+      </View>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  container: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 16,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: "#e3e3e3",
+    borderRadius: 12,
+    padding: 16,
+    backgroundColor: "#fafafa",
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 12,
+  },
+  optionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  optionRowActive: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+  },
+  optionText: {
+    flex: 1,
+  },
+  optionLabel: {
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  optionDetail: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 2,
+  },
+  optionStatus: {
+    width: 24,
+    textAlign: "center",
+    fontSize: 18,
+    color: "#2c7a7b",
+  },
+})

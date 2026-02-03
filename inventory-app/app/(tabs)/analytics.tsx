@@ -13,10 +13,12 @@ import {
   getTransactions,
   Transaction,
 } from "../../store/transactions"
+import { useLanguage } from "../../hooks/use-language"
 
 export default function AnalyticsScreen() {
   const [products, setProducts] = useState<Product[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const { t } = useLanguage()
 
   useFocusEffect(
     useCallback(() => {
@@ -129,6 +131,41 @@ export default function AnalyticsScreen() {
       salesList.length > 0
         ? [...salesList].sort((a, b) => b.quantity - a.quantity)[0]
         : null
+    const slowMoverProduct =
+      salesList.length > 0
+        ? [...salesList].sort((a, b) => a.quantity - b.quantity)[0]
+        : null
+
+    const restockByProduct = totalRestocks.reduce(
+      (acc, tx) => {
+        const current = acc[tx.productId] ?? {
+          name: tx.productName,
+          quantity: 0,
+        }
+        current.quantity += tx.quantity
+        acc[tx.productId] = current
+        return acc
+      },
+      {} as Record<number, { name: string; quantity: number }>
+    )
+    const restockList = Object.values(restockByProduct)
+    const mostRestocked =
+      restockList.length > 0
+        ? [...restockList].sort((a, b) => b.quantity - a.quantity)[0]
+        : null
+
+    const marginCandidates = products.map(product => {
+      const unitMargin = product.price - product.cost
+      const marginPercent =
+        product.price > 0 ? (unitMargin / product.price) * 100 : 0
+      return { name: product.name, marginPercent }
+    })
+    const bestMarginProduct =
+      marginCandidates.length > 0
+        ? [...marginCandidates].sort(
+            (a, b) => b.marginPercent - a.marginPercent
+          )[0]
+        : null
 
     const activeProducts = products.filter(
       product => !product.isArchived
@@ -157,6 +194,9 @@ export default function AnalyticsScreen() {
       productInsights: {
         topRevenueProduct,
         topVolumeProduct,
+        slowMoverProduct,
+        mostRestocked,
+        bestMarginProduct,
       },
       inventoryInsights: {
         activeCount: activeProducts.length,
@@ -176,8 +216,8 @@ export default function AnalyticsScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Analytics</Text>
-        <Text style={styles.subtitle}>Sales overview</Text>
+        <Text style={styles.title}>{t("analyticsTitle")}</Text>
+        <Text style={styles.subtitle}>{t("salesOverview")}</Text>
 
         <View style={styles.grid}>
           {periodSummaries.map(period => (
@@ -202,7 +242,7 @@ export default function AnalyticsScreen() {
           ))}
         </View>
 
-        <Text style={styles.subtitle}>Business health</Text>
+        <Text style={styles.subtitle}>{t("businessHealth")}</Text>
         <View style={styles.cardWide}>
           <View style={styles.row}>
             <View style={styles.rowItem}>
@@ -237,25 +277,43 @@ export default function AnalyticsScreen() {
           </Text>
         </View>
 
-        <Text style={styles.subtitle}>Product insights</Text>
+        <Text style={styles.subtitle}>{t("productInsights")}</Text>
         <View style={styles.cardWide}>
-          <Text style={styles.label}>Top revenue item</Text>
+          <Text style={styles.label}>{t("topRevenueItem")}</Text>
           <Text style={styles.value}>
             {productInsights.topRevenueProduct
               ? `${productInsights.topRevenueProduct.name} · ${formatMoney(
                   productInsights.topRevenueProduct.revenue
                 )}`
-              : "No sales yet"}
+              : t("noSales")}
           </Text>
-          <Text style={styles.label}>Most sold item</Text>
+          <Text style={styles.label}>{t("mostSoldItem")}</Text>
           <Text style={styles.value}>
             {productInsights.topVolumeProduct
               ? `${productInsights.topVolumeProduct.name} · ${productInsights.topVolumeProduct.quantity} sold`
-              : "No sales yet"}
+              : t("noSales")}
+          </Text>
+          <Text style={styles.label}>{t("slowMover")}</Text>
+          <Text style={styles.value}>
+            {productInsights.slowMoverProduct
+              ? `${productInsights.slowMoverProduct.name} · ${productInsights.slowMoverProduct.quantity} sold`
+              : t("noSales")}
+          </Text>
+          <Text style={styles.label}>{t("mostRestockedItem")}</Text>
+          <Text style={styles.value}>
+            {productInsights.mostRestocked
+              ? `${productInsights.mostRestocked.name} · ${productInsights.mostRestocked.quantity} restocked`
+              : t("noRestocks")}
+          </Text>
+          <Text style={styles.label}>{t("bestMarginItem")}</Text>
+          <Text style={styles.value}>
+            {productInsights.bestMarginProduct
+              ? `${productInsights.bestMarginProduct.name} · ${productInsights.bestMarginProduct.marginPercent.toFixed(1)}%`
+              : t("noSales")}
           </Text>
         </View>
 
-        <Text style={styles.subtitle}>Inventory watch</Text>
+        <Text style={styles.subtitle}>{t("inventoryWatch")}</Text>
         <View style={styles.cardWide}>
           <View style={styles.row}>
             <View style={styles.rowItem}>
@@ -288,7 +346,7 @@ export default function AnalyticsScreen() {
           <View style={styles.lowStockList}>
             {inventoryInsights.lowStock.length === 0 ? (
               <Text style={styles.helper}>
-                Stock levels look healthy.
+                {t("stockHealthy")}
               </Text>
             ) : (
               inventoryInsights.lowStock.slice(0, 4).map(product => (

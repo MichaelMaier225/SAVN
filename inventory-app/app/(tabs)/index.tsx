@@ -20,6 +20,7 @@ import {
   undoLastAction,
   Product,
 } from "../../store/products"
+import { useLanguage } from "../../hooks/use-language"
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([])
@@ -29,6 +30,7 @@ export default function HomeScreen() {
   const [bulkQty, setBulkQty] = useState("1")
   const [bulkTotal, setBulkTotal] = useState("")
   const [bulkTotalTouched, setBulkTotalTouched] = useState(false)
+  const { t } = useLanguage()
 
   const refresh = () => {
     setProducts([...getProducts()])
@@ -105,10 +107,14 @@ export default function HomeScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>SAVN</Text>
 
-        <Text>Revenue: ${revenue.toFixed(2)}</Text>
-        <Text>Expenses: ${expenses.toFixed(2)}</Text>
+        <Text>
+          {t("revenue")}: ${revenue.toFixed(2)}
+        </Text>
+        <Text>
+          {t("expenses")}: ${expenses.toFixed(2)}
+        </Text>
         <Text style={styles.profit}>
-          Profit: ${(revenue - expenses).toFixed(2)}
+          {t("profit")}: ${(revenue - expenses).toFixed(2)}
         </Text>
 
         {activeProducts.map(p => (
@@ -169,7 +175,7 @@ export default function HomeScreen() {
         ))}
 
         <Text style={styles.helperText}>
-          Hold + to restock in bulk.
+          {t("holdRestock")}
         </Text>
       </View>
 
