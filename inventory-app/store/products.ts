@@ -9,6 +9,7 @@ export type Product = {
   revenue: number
   expenses: number
   isActive: boolean
+  isArchived: boolean
 }
 
 type Snapshot = {
@@ -34,6 +35,7 @@ const loadState = async () => {
     products = JSON.parse(storedProducts).map((product: Product) => ({
       ...product,
       isActive: product.isActive ?? true,
+      isArchived: product.isArchived ?? false,
     }))
   }
 
@@ -51,7 +53,8 @@ const snapshot = () => {
 }
 
 export const getProducts = () => products
-export const getActiveProducts = () => products.filter(p => p.isActive)
+export const getActiveProducts = () =>
+  products.filter(p => p.isActive && !p.isArchived)
 
 export const addProduct = (
   name: string,
@@ -72,6 +75,7 @@ export const addProduct = (
       revenue: 0,
       expenses: qty * cost,
       isActive: true,
+      isArchived: false,
     },
   ]
 
@@ -96,6 +100,7 @@ export const addCatalogProduct = (
       revenue: 0,
       expenses: 0,
       isActive: true,
+      isArchived: false,
     },
   ]
 
@@ -233,7 +238,7 @@ export const setProductActive = (id: number, isActive: boolean) => {
   snapshot()
 
   products = products.map(p =>
-    p.id === id
+    p.id === id && !p.isArchived
       ? {
           ...p,
           isActive,
@@ -246,7 +251,15 @@ export const setProductActive = (id: number, isActive: boolean) => {
 
 export const removeProduct = (id: number) => {
   snapshot()
-  products = products.filter(p => p.id !== id)
+  products = products.map(p =>
+    p.id === id
+      ? {
+          ...p,
+          isArchived: true,
+          isActive: false,
+        }
+      : p
+  )
   saveState()
 }
 
