@@ -105,6 +105,11 @@ type TranslationKey =
   | "salesOverview"
   | "settings"
   | "settingsTitle"
+  | "moreTools"
+  | "moreToolsHelper"
+  | "moreAnalyticsHelper"
+  | "moreInsightsHelper"
+  | "moreExploreHelper"
   | "slowMover"
   | "stockHealthy"
   | "topRevenueItem"
@@ -272,6 +277,11 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     salesOverview: "Sales overview",
     settings: "Settings",
     settingsTitle: "Settings",
+    moreTools: "More tools",
+    moreToolsHelper: "Jump to deeper reports and tips.",
+    moreAnalyticsHelper: "Track revenue, margin, and stock performance.",
+    moreInsightsHelper: "See trends by day, week, and month.",
+    moreExploreHelper: "Get quick tips for faster workflows.",
     slowMover: "Slow mover",
     stockHealthy: "Stock levels look healthy.",
     topRevenueItem: "Top revenue item",
@@ -446,6 +456,13 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     salesOverview: "Tổng quan bán hàng",
     settings: "Cài đặt",
     settingsTitle: "Cài đặt",
+    moreTools: "Công cụ bổ sung",
+    moreToolsHelper: "Truy cập báo cáo chi tiết và mẹo nhanh.",
+    moreAnalyticsHelper:
+      "Theo dõi doanh thu, lợi nhuận và tồn kho.",
+    moreInsightsHelper:
+      "Xem xu hướng theo ngày, tuần và tháng.",
+    moreExploreHelper: "Nhận mẹo để thao tác nhanh hơn.",
     slowMover: "Bán chậm",
     stockHealthy: "Tồn kho đang ổn định.",
     topRevenueItem: "Sản phẩm doanh thu cao nhất",

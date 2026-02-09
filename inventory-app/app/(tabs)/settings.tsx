@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
 } from "react-native"
+import { useRouter } from "expo-router"
 
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
@@ -35,6 +36,7 @@ export default function SettingsScreen() {
   const { language, setLanguage, t } = useLanguage()
   const [updating, setUpdating] = useState<Language | null>(null)
   const { currency, setCurrency } = useCurrency()
+  const router = useRouter()
 
   const handleSelect = async (next: Language) => {
     setUpdating(next)
@@ -68,6 +70,27 @@ export default function SettingsScreen() {
   const [selectedClearDuration, setSelectedClearDuration] =
     useState<number | null>(clearHistoryOptions[1].durationMs)
 
+  const quickLinks = [
+    {
+      key: "analytics",
+      label: t("analytics"),
+      detail: t("moreAnalyticsHelper"),
+      onPress: () => router.push("/analytics"),
+    },
+    {
+      key: "insights",
+      label: t("insights"),
+      detail: t("moreInsightsHelper"),
+      onPress: () => router.push("/insights"),
+    },
+    {
+      key: "explore",
+      label: t("explore"),
+      detail: t("moreExploreHelper"),
+      onPress: () => router.push("/explore"),
+    },
+  ]
+
   const handleClearHistory = (durationMs: number | null) => {
     Alert.alert(
       t("clearHistoryWarningTitle"),
@@ -95,10 +118,30 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>{t("settingsTitle")}</Text>
-        <Text style={styles.subtitle}>{t("changeLanguageHelper")}</Text>
 
-        <View style={styles.card}>
+        <View style={[styles.card, styles.cardSpacing]}>
+          <Text style={styles.sectionTitle}>{t("moreTools")}</Text>
+          <Text style={styles.helperText}>{t("moreToolsHelper")}</Text>
+          {quickLinks.map(link => (
+            <TouchableOpacity
+              key={link.key}
+              style={styles.linkRow}
+              onPress={link.onPress}
+            >
+              <View style={styles.optionText}>
+                <Text style={styles.optionLabel}>{link.label}</Text>
+                <Text style={styles.optionDetail}>{link.detail}</Text>
+              </View>
+              <Text style={styles.linkChevron}>›</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={[styles.card, styles.cardSpacing]}>
           <Text style={styles.sectionTitle}>{t("appLanguage")}</Text>
+          <Text style={styles.helperText}>
+            {t("changeLanguageHelper")}
+          </Text>
           {languageOptions.map(option => {
             const isActive = language === option.value
             return (
@@ -207,11 +250,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 6,
   },
-  subtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 16,
-  },
   cardSpacing: {
     marginTop: 16,
   },
@@ -221,6 +259,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     backgroundColor: "#fafafa",
+  },
+  linkRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
   sectionTitle: {
     fontSize: 16,
@@ -251,6 +297,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginTop: 2,
+  },
+  linkChevron: {
+    width: 24,
+    textAlign: "center",
+    fontSize: 22,
+    color: "#999",
   },
   optionStatus: {
     width: 24,
