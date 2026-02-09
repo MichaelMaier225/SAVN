@@ -10,6 +10,10 @@ import {
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
 import { Currency, Language } from "../../store/settings"
+import {
+  getTransactions,
+  setTransactions,
+} from "../../store/transactions"
 
 const languageOptions: Array<{
   value: Language
@@ -46,6 +50,27 @@ export default function SettingsScreen() {
     { value: "USD", label: t("currencyUSD") },
     { value: "VND", label: t("currencyVND") },
   ]
+
+  const clearHistoryOptions = [
+    { label: t("hourly"), durationMs: 60 * 60 * 1000 },
+    { label: t("daily"), durationMs: 24 * 60 * 60 * 1000 },
+    { label: t("weekly"), durationMs: 7 * 24 * 60 * 60 * 1000 },
+    { label: t("monthly"), durationMs: 30 * 24 * 60 * 60 * 1000 },
+    { label: t("allTime"), durationMs: null },
+  ]
+
+  const handleClearHistory = (durationMs: number | null) => {
+    if (!durationMs) {
+      setTransactions([])
+      return
+    }
+
+    const cutoff = Date.now() - durationMs
+    const remaining = getTransactions().filter(
+      transaction => transaction.timestamp < cutoff
+    )
+    setTransactions(remaining)
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -105,6 +130,23 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             )
           })}
+        </View>
+
+        <View style={[styles.card, styles.cardSpacing]}>
+          <Text style={styles.sectionTitle}>{t("clearHistory")}</Text>
+          <Text style={styles.helperText}>
+            {t("clearHistoryHelper")}
+          </Text>
+          {clearHistoryOptions.map(option => (
+            <TouchableOpacity
+              key={option.label}
+              style={styles.optionRow}
+              onPress={() => handleClearHistory(option.durationMs)}
+            >
+              <Text style={styles.optionLabel}>{option.label}</Text>
+              <Text style={styles.clearAction}>{t("clear")}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
     </SafeAreaView>
@@ -179,5 +221,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#777",
     marginBottom: 12,
+  },
+  clearAction: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#cc4c4c",
   },
 })

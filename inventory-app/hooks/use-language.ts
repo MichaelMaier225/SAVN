@@ -18,6 +18,9 @@ type TranslationKey =
   | "businessHealth"
   | "cancel"
   | "changeLanguageHelper"
+  | "clear"
+  | "clearHistory"
+  | "clearHistoryHelper"
   | "currency"
   | "currencyHelper"
   | "daysTracked"
@@ -160,6 +163,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     cancel: "Cancel",
     changeLanguageHelper:
       "Switch languages for labels across the app.",
+    clear: "Clear",
+    clearHistory: "Clear history",
+    clearHistoryHelper:
+      "Remove history entries from the last hour, day, week, month, or all time.",
     currency: "Currency",
     currencyHelper: "Choose the currency symbol for prices.",
     daysTracked: "Days tracked",
@@ -313,6 +320,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     cancel: "Hủy",
     changeLanguageHelper:
       "Đổi ngôn ngữ cho các nhãn trên toàn ứng dụng.",
+    clear: "Xóa",
+    clearHistory: "Xóa lịch sử",
+    clearHistoryHelper:
+      "Xóa các mục lịch sử trong giờ, ngày, tuần, tháng hoặc mọi thời gian.",
     currency: "Tiền tệ",
     currencyHelper: "Chọn ký hiệu tiền tệ cho giá.",
     daysTracked: "Số ngày theo dõi",
