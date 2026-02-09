@@ -46,9 +46,9 @@ export default function TabLayout() {
         name="catalog"
         options={{
           title: "Add",
-          tabBarIcon: renderTabIcon("plus.circle.fill", 30),
+          tabBarIcon: renderTabIcon("plus.circle.fill", 24),
           tabBarActiveTintColor: colors.tint,
-          tabBarIconStyle: { marginTop: -4 },
+          tabBarIconStyle: { marginTop: 0 },
         }}
       />
       <Tabs.Screen
