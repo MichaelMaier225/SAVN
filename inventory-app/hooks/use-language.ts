@@ -43,10 +43,16 @@ type TranslationKey =
   | "exploreBulkRestockBody"
   | "exploreCatalogTitle"
   | "exploreCatalogBody"
+  | "exploreUndoTitle"
+  | "exploreUndoBody"
+  | "exploreInsightsTitle"
+  | "exploreInsightsBody"
   | "exploreHistoryTitle"
   | "exploreHistoryBody"
   | "exploreAnalyticsTitle"
   | "exploreAnalyticsBody"
+  | "exploreSettingsTitle"
+  | "exploreSettingsBody"
   | "grossMargin"
   | "grossProfit"
   | "history"
@@ -195,13 +201,22 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
       "When you restock a lot at once, long-press + to enter quantity and total cost in one step.",
     exploreCatalogTitle: "Keep your catalog updated",
     exploreCatalogBody:
-      "Add new items in Catalog, set prices and costs, and pause items without losing history.",
+      "Search products, update prices and costs, adjust inventory, and archive items without losing history.",
+    exploreUndoTitle: "Undo the last action",
+    exploreUndoBody:
+      "Made a mistake? Tap Undo to reverse the most recent sale or restock.",
+    exploreInsightsTitle: "Spot trends with Insights",
+    exploreInsightsBody:
+      "See revenue vs restock spend, sales trends, and product performance across report ranges.",
     exploreHistoryTitle: "Track every sale",
     exploreHistoryBody:
       "History keeps a log of sales, restocks, and adjustments so you can review busy periods quickly.",
     exploreAnalyticsTitle: "Know your best sellers",
     exploreAnalyticsBody:
       "Analytics shows top items, revenue, and low stock so you know what to restock first.",
+    exploreSettingsTitle: "Personalize your settings",
+    exploreSettingsBody:
+      "Switch language, set your currency, and clear history when you need a fresh start.",
     grossMargin: "Gross margin",
     grossProfit: "Gross profit",
     history: "History",
@@ -355,13 +370,22 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
       "Khi nhập nhiều cùng lúc, hãy nhấn giữ + để nhập số lượng và tổng chi phí trong một bước.",
     exploreCatalogTitle: "Giữ danh mục luôn cập nhật",
     exploreCatalogBody:
-      "Thêm sản phẩm mới trong Danh mục, đặt giá bán và giá vốn, hoặc tạm dừng sản phẩm mà vẫn giữ lịch sử.",
+      "Tìm sản phẩm, cập nhật giá bán và giá vốn, chỉnh tồn kho, hoặc lưu trữ sản phẩm mà vẫn giữ lịch sử.",
+    exploreUndoTitle: "Hoàn tác thao tác vừa rồi",
+    exploreUndoBody:
+      "Lỡ tay? Nhấn Hoàn tác để đảo ngược lần bán hoặc nhập hàng gần nhất.",
+    exploreInsightsTitle: "Theo dõi xu hướng với Thông tin",
+    exploreInsightsBody:
+      "Xem doanh thu và chi phí nhập, xu hướng bán hàng, cùng hiệu suất sản phẩm theo khoảng báo cáo.",
     exploreHistoryTitle: "Theo dõi mọi giao dịch",
     exploreHistoryBody:
       "Lịch sử lưu lại bán hàng, nhập hàng và điều chỉnh để bạn xem nhanh các thời điểm bận rộn.",
     exploreAnalyticsTitle: "Biết sản phẩm bán chạy",
     exploreAnalyticsBody:
       "Phân tích hiển thị sản phẩm bán chạy, doanh thu và cảnh báo sắp hết hàng.",
+    exploreSettingsTitle: "Cá nhân hóa cài đặt",
+    exploreSettingsBody:
+      "Đổi ngôn ngữ, chọn tiền tệ và xóa lịch sử khi cần bắt đầu lại.",
     grossMargin: "Biên lợi nhuận gộp",
     grossProfit: "Lợi nhuận gộp",
     history: "Lịch sử",

@@ -46,10 +46,28 @@ export default function ExploreScreen() {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>
+            {t("exploreUndoTitle")}
+          </Text>
+          <Text style={styles.cardBody}>
+            {t("exploreUndoBody")}
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
             {t("exploreCatalogTitle")}
           </Text>
           <Text style={styles.cardBody}>
             {t("exploreCatalogBody")}
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            {t("exploreInsightsTitle")}
+          </Text>
+          <Text style={styles.cardBody}>
+            {t("exploreInsightsBody")}
           </Text>
         </View>
 
@@ -68,6 +86,15 @@ export default function ExploreScreen() {
           </Text>
           <Text style={styles.cardBody}>
             {t("exploreAnalyticsBody")}
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            {t("exploreSettingsTitle")}
+          </Text>
+          <Text style={styles.cardBody}>
+            {t("exploreSettingsBody")}
           </Text>
         </View>
       </ScrollView>
