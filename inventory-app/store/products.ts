@@ -418,12 +418,24 @@ export const clearHistory = (durationMs: number | null) => {
   snapshot()
 
   const transactions = getTransactions()
-  const adjustTotals = (removed: Transaction[]) => {
-    if (removed.length === 0) return
+  const adjustTotals = (
+    removed: Transaction[],
+    resetTotals: boolean
+  ) => {
+    if (removed.length === 0) {
+      if (resetTotals) {
+        products = products.map(product => ({
+          ...product,
+          revenue: 0,
+          expenses: 0,
+        }))
+      }
+      return
+    }
 
     const adjustments = new Map<
       number,
-      { revenue: number; expenses: number }
+      { revenue: number; expenses: number; qtyDelta: number }
     >()
 
     removed.forEach(transaction => {
@@ -434,12 +446,15 @@ export const clearHistory = (durationMs: number | null) => {
       const existing = adjustments.get(transaction.productId) ?? {
         revenue: 0,
         expenses: 0,
+        qtyDelta: 0,
       }
 
       if (transaction.type === "sale") {
         existing.revenue += transaction.amount
+        existing.qtyDelta += transaction.quantity
       } else if (transaction.type === "restock") {
         existing.expenses += transaction.amount
+        existing.qtyDelta -= transaction.quantity
       }
 
       adjustments.set(transaction.productId, existing)
@@ -451,15 +466,20 @@ export const clearHistory = (durationMs: number | null) => {
 
       return {
         ...product,
-        revenue: Math.max(0, product.revenue - adjustment.revenue),
-        expenses: Math.max(0, product.expenses - adjustment.expenses),
+        qty: Math.max(0, product.qty + adjustment.qtyDelta),
+        revenue: resetTotals
+          ? 0
+          : Math.max(0, product.revenue - adjustment.revenue),
+        expenses: resetTotals
+          ? 0
+          : Math.max(0, product.expenses - adjustment.expenses),
       }
     })
   }
 
   if (!durationMs) {
     setTransactions([])
-    adjustTotals(transactions)
+    adjustTotals(transactions, true)
     saveState()
     return
   }
@@ -472,7 +492,7 @@ export const clearHistory = (durationMs: number | null) => {
     transaction => transaction.timestamp >= cutoff
   )
   setTransactions(remaining)
-  adjustTotals(removed)
+  adjustTotals(removed, false)
   saveState()
 }
 
