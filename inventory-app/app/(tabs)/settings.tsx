@@ -11,10 +11,7 @@ import {
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
 import { Currency, Language } from "../../store/settings"
-import {
-  clearHistory,
-  undoLastAction,
-} from "../../store/products"
+import { clearHistory } from "../../store/products"
 
 const languageOptions: Array<{
   value: Language
@@ -37,7 +34,6 @@ export default function SettingsScreen() {
   const { language, setLanguage, t } = useLanguage()
   const [updating, setUpdating] = useState<Language | null>(null)
   const { currency, setCurrency } = useCurrency()
-  const [canUndoClear, setCanUndoClear] = useState(false)
 
   const handleSelect = async (next: Language) => {
     setUpdating(next)
@@ -54,21 +50,24 @@ export default function SettingsScreen() {
   ]
 
   const clearHistoryOptions = [
-    { label: t("hourly"), durationMs: 60 * 60 * 1000 },
-    { label: t("daily"), durationMs: 24 * 60 * 60 * 1000 },
-    { label: t("weekly"), durationMs: 7 * 24 * 60 * 60 * 1000 },
-    { label: t("monthly"), durationMs: 30 * 24 * 60 * 60 * 1000 },
-    { label: t("allTime"), durationMs: null },
+    { key: "hourly", label: t("hourly"), durationMs: 60 * 60 * 1000 },
+    { key: "daily", label: t("daily"), durationMs: 24 * 60 * 60 * 1000 },
+    {
+      key: "weekly",
+      label: t("weekly"),
+      durationMs: 7 * 24 * 60 * 60 * 1000,
+    },
+    {
+      key: "monthly",
+      label: t("monthly"),
+      durationMs: 30 * 24 * 60 * 60 * 1000,
+    },
+    { key: "allTime", label: t("allTime"), durationMs: null },
   ]
-  const clearActionLabel = canUndoClear ? t("undo") : t("clear")
+  const [selectedClearDuration, setSelectedClearDuration] =
+    useState<number | null>(clearHistoryOptions[1].durationMs)
 
   const handleClearHistory = (durationMs: number | null) => {
-    if (canUndoClear) {
-      undoLastAction()
-      setCanUndoClear(false)
-      return
-    }
-
     Alert.alert(
       t("clearHistoryWarningTitle"),
       t("clearHistoryWarningBody"),
@@ -82,7 +81,6 @@ export default function SettingsScreen() {
           style: "destructive",
           onPress: () => {
             clearHistory(durationMs)
-            setCanUndoClear(true)
           },
         },
       ]
@@ -154,23 +152,37 @@ export default function SettingsScreen() {
           <Text style={styles.helperText}>
             {t("clearHistoryHelper")}
           </Text>
-          {canUndoClear ? (
-            <Text style={styles.helperText}>
-              {t("clearHistoryUndoHelper")}
+          {clearHistoryOptions.map(option => {
+            const isSelected =
+              selectedClearDuration === option.durationMs
+            return (
+              <TouchableOpacity
+                key={option.key}
+                style={[
+                  styles.optionRow,
+                  isSelected && styles.optionRowActive,
+                ]}
+                onPress={() =>
+                  setSelectedClearDuration(option.durationMs)
+                }
+              >
+                <Text style={styles.optionLabel}>{option.label}</Text>
+                <Text style={styles.optionStatus}>
+                  {isSelected ? "✓" : ""}
+                </Text>
+              </TouchableOpacity>
+            )
+          })}
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() =>
+              handleClearHistory(selectedClearDuration)
+            }
+          >
+            <Text style={styles.clearButtonText}>
+              {t("clear")}
             </Text>
-          ) : null}
-          {clearHistoryOptions.map(option => (
-            <TouchableOpacity
-              key={option.label}
-              style={styles.optionRow}
-              onPress={() => handleClearHistory(option.durationMs)}
-            >
-              <Text style={styles.optionLabel}>{option.label}</Text>
-              <Text style={styles.clearAction}>
-                {clearActionLabel}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -246,9 +258,16 @@ const styles = StyleSheet.create({
     color: "#777",
     marginBottom: 12,
   },
-  clearAction: {
+  clearButton: {
+    marginTop: 8,
+    backgroundColor: "#cc4c4c",
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  clearButtonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#cc4c4c",
+    color: "#fff",
   },
 })
