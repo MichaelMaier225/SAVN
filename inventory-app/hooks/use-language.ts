@@ -168,10 +168,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     clear: "Clear",
     clearHistory: "Clear history",
     clearHistoryHelper:
-      "Select a range to remove history entries.",
+      "Select a range to remove history entries and update revenue and expenses totals.",
     clearHistoryWarningTitle: "Clear history?",
     clearHistoryWarningBody:
-      "This will remove matching history entries.",
+      "This will remove matching history entries and adjust revenue and expenses.",
     currency: "Currency",
     currencyHelper: "Choose the currency symbol for prices.",
     daysTracked: "Days tracked",
@@ -306,7 +306,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     emptyInventoryTitle: "Add items before selling",
     emptyInventoryBody:
       "Create your catalog first so you can sell fast from the Inventory tab.",
-    emptyInventoryCta: "Go to Catalog",
+    emptyInventoryCta: "Open catalog",
     updateProduct: "Update",
     vendorCatalogSubtitle:
       "Add or remove products without affecting revenue or expenses.",
@@ -328,10 +328,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     clear: "Xóa",
     clearHistory: "Xóa lịch sử",
     clearHistoryHelper:
-      "Chọn khoảng thời gian để xóa lịch sử giao dịch.",
+      "Chọn khoảng thời gian để xóa lịch sử và cập nhật doanh thu, chi phí.",
     clearHistoryWarningTitle: "Xóa lịch sử?",
     clearHistoryWarningBody:
-      "Thao tác này sẽ xóa các mục lịch sử tương ứng.",
+      "Thao tác này sẽ xóa các mục lịch sử tương ứng và cập nhật doanh thu, chi phí.",
     currency: "Tiền tệ",
     currencyHelper: "Chọn ký hiệu tiền tệ cho giá.",
     daysTracked: "Số ngày theo dõi",
@@ -468,7 +468,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     emptyInventoryTitle: "Thêm sản phẩm trước khi bán",
     emptyInventoryBody:
       "Tạo danh mục trước để bạn bán nhanh trong tab Tồn kho.",
-    emptyInventoryCta: "Mở Danh mục",
+    emptyInventoryCta: "Mở danh mục",
     updateProduct: "Cập nhật",
     vendorCatalogSubtitle:
       "Thêm hoặc xóa sản phẩm mà không ảnh hưởng doanh thu hoặc chi phí.",

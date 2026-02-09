@@ -417,17 +417,62 @@ export const removeProduct = (id: number) => {
 export const clearHistory = (durationMs: number | null) => {
   snapshot()
 
+  const transactions = getTransactions()
+  const adjustTotals = (removed: Transaction[]) => {
+    if (removed.length === 0) return
+
+    const adjustments = new Map<
+      number,
+      { revenue: number; expenses: number }
+    >()
+
+    removed.forEach(transaction => {
+      if (transaction.type !== "sale" && transaction.type !== "restock") {
+        return
+      }
+
+      const existing = adjustments.get(transaction.productId) ?? {
+        revenue: 0,
+        expenses: 0,
+      }
+
+      if (transaction.type === "sale") {
+        existing.revenue += transaction.amount
+      } else if (transaction.type === "restock") {
+        existing.expenses += transaction.amount
+      }
+
+      adjustments.set(transaction.productId, existing)
+    })
+
+    products = products.map(product => {
+      const adjustment = adjustments.get(product.id)
+      if (!adjustment) return product
+
+      return {
+        ...product,
+        revenue: Math.max(0, product.revenue - adjustment.revenue),
+        expenses: Math.max(0, product.expenses - adjustment.expenses),
+      }
+    })
+  }
+
   if (!durationMs) {
     setTransactions([])
+    adjustTotals(transactions)
     saveState()
     return
   }
 
   const cutoff = Date.now() - durationMs
-  const remaining = getTransactions().filter(
+  const remaining = transactions.filter(
     transaction => transaction.timestamp < cutoff
   )
+  const removed = transactions.filter(
+    transaction => transaction.timestamp >= cutoff
+  )
   setTransactions(remaining)
+  adjustTotals(removed)
   saveState()
 }
 
