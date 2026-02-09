@@ -51,16 +51,22 @@ type TranslationKey =
   | "historyRestock"
   | "historyAdjustment"
   | "holdRestock"
+  | "hourly"
   | "insufficientStockTitle"
   | "insufficientStockBody"
   | "inventory"
   | "inventoryValue"
   | "inventoryWatch"
+  | "insights"
+  | "insightsTitle"
+  | "product"
   | "lifetimeRevenue"
   | "language"
   | "lowStock"
+  | "monthly"
   | "mostRestockedItem"
   | "mostSoldItem"
+  | "allTime"
   | "apply"
   | "periodMonth"
   | "periodToday"
@@ -72,7 +78,9 @@ type TranslationKey =
   | "quantity"
   | "restock"
   | "restockSpend"
+  | "reportRange"
   | "sales"
+  | "salesTrend"
   | "salesLogged"
   | "profit"
   | "productInsights"
@@ -88,10 +96,15 @@ type TranslationKey =
   | "stockHealthy"
   | "topRevenueItem"
   | "totalCost"
+  | "totalProducts"
   | "totalRevenue"
   | "totalSales"
   | "undo"
   | "vendors"
+  | "yearly"
+  | "weekly"
+  | "daily"
+  | "revenueVsRestock"
   | "currencyUSD"
   | "currencyVND"
   | "activeItems"
@@ -186,17 +199,23 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     historyRestock: "Restocked {quantity} {product} · {amount}",
     historyAdjustment: "Adjusted {quantity} {product} · {amount}",
     holdRestock: "Hold + to restock in bulk. Hold − to sell in bulk.",
+    hourly: "Hourly",
     insufficientStockTitle: "Not enough inventory",
     insufficientStockBody:
       "You cannot sell more than the available stock.",
     inventory: "Inventory",
     inventoryValue: "Inventory value",
     inventoryWatch: "Inventory watch",
+    insights: "Insights",
+    insightsTitle: "Insights",
+    product: "Product",
     lifetimeRevenue: "Lifetime revenue",
     language: "Language",
     lowStock: "Low stock",
+    monthly: "Monthly",
     mostRestockedItem: "Most restocked item",
     mostSoldItem: "Most sold item",
+    allTime: "All time",
     apply: "Apply",
     periodMonth: "This Month",
     periodToday: "Today",
@@ -208,7 +227,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     quantity: "Quantity",
     restock: "Restock",
     restockSpend: "Restock spend",
+    reportRange: "Report range",
     sales: "Sales",
+    salesTrend: "Sales trend",
     salesLogged: "total sales logged.",
     profit: "Profit",
     productInsights: "Product insights",
@@ -224,10 +245,15 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     stockHealthy: "Stock levels look healthy.",
     topRevenueItem: "Top revenue item",
     totalCost: "Total cost",
+    totalProducts: "Total products",
     totalRevenue: "Total revenue",
     totalSales: "Total sales",
     undo: "Undo",
     vendors: "Vendors",
+    weekly: "Weekly",
+    yearly: "Yearly",
+    daily: "Daily",
+    revenueVsRestock: "Revenue vs restock spend",
     currencyUSD: "US dollar (USD)",
     currencyVND: "Vietnamese dong (VND)",
     activeItems: "Active items",
@@ -328,17 +354,23 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     historyAdjustment: "Điều chỉnh {quantity} {product} · {amount}",
     holdRestock:
       "Giữ + để nhập hàng số lượng lớn. Giữ − để bán số lượng lớn.",
+    hourly: "Theo giờ",
     insufficientStockTitle: "Không đủ tồn kho",
     insufficientStockBody:
       "Bạn không thể bán nhiều hơn số lượng hiện có.",
     inventory: "Tồn kho",
     inventoryValue: "Giá trị tồn kho",
     inventoryWatch: "Theo dõi tồn kho",
+    insights: "Thông tin",
+    insightsTitle: "Thông tin",
+    product: "Sản phẩm",
     lifetimeRevenue: "Doanh thu tổng",
     language: "Ngôn ngữ",
     lowStock: "Sắp hết hàng",
+    monthly: "Theo tháng",
     mostRestockedItem: "Mặt hàng nhập nhiều nhất",
     mostSoldItem: "Mặt hàng bán chạy nhất",
+    allTime: "Tất cả thời gian",
     apply: "Áp dụng",
     periodMonth: "Tháng này",
     periodToday: "Hôm nay",
@@ -350,7 +382,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     quantity: "Số lượng",
     restock: "Nhập hàng",
     restockSpend: "Chi phí nhập hàng",
+    reportRange: "Khoảng báo cáo",
     sales: "Bán hàng",
+    salesTrend: "Xu hướng bán hàng",
     salesLogged: "giao dịch bán hàng đã ghi.",
     profit: "Lợi nhuận",
     productInsights: "Thông tin sản phẩm",
@@ -366,10 +400,15 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     stockHealthy: "Tồn kho đang ổn định.",
     topRevenueItem: "Sản phẩm doanh thu cao nhất",
     totalCost: "Tổng chi phí",
+    totalProducts: "Tổng sản phẩm",
     totalRevenue: "Tổng doanh thu",
     totalSales: "Tổng số bán",
     undo: "Hoàn tác",
     vendors: "Nhà cung cấp",
+    weekly: "Theo tuần",
+    yearly: "Theo năm",
+    daily: "Theo ngày",
+    revenueVsRestock: "Doanh thu và chi phí nhập",
     currencyUSD: "Đô la Mỹ (USD)",
     currencyVND: "Việt Nam đồng (VND)",
     activeItems: "Mặt hàng đang bán",
