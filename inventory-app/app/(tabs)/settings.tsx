@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import {
+  Alert,
   View,
   Text,
   StyleSheet,
@@ -10,6 +11,11 @@ import {
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
 import { Currency, Language } from "../../store/settings"
+import {
+  getTransactions,
+  Transaction,
+  setTransactions,
+} from "../../store/transactions"
 
 const languageOptions: Array<{
   value: Language
@@ -32,6 +38,10 @@ export default function SettingsScreen() {
   const { language, setLanguage, t } = useLanguage()
   const [updating, setUpdating] = useState<Language | null>(null)
   const { currency, setCurrency } = useCurrency()
+  const [selectedRange, setSelectedRange] = useState(0)
+  const [lastSnapshot, setLastSnapshot] = useState<Transaction[] | null>(
+    null
+  )
 
   const handleSelect = async (next: Language) => {
     setUpdating(next)
@@ -46,6 +56,51 @@ export default function SettingsScreen() {
     { value: "USD", label: t("currencyUSD") },
     { value: "VND", label: t("currencyVND") },
   ]
+
+  const clearHistoryOptions = useMemo(
+    () => [
+      { label: t("hourly"), durationMs: 60 * 60 * 1000 },
+      { label: t("daily"), durationMs: 24 * 60 * 60 * 1000 },
+      { label: t("weekly"), durationMs: 7 * 24 * 60 * 60 * 1000 },
+      { label: t("monthly"), durationMs: 30 * 24 * 60 * 60 * 1000 },
+      { label: t("allTime"), durationMs: null },
+    ],
+    [t]
+  )
+
+  const handleClearHistory = () => {
+    const selection = clearHistoryOptions[selectedRange]
+    if (!selection) return
+
+    Alert.alert(t("clearHistoryWarningTitle"), t("clearHistoryWarningBody"), [
+      { text: t("cancel"), style: "cancel" },
+      {
+        text: t("clear"),
+        style: "destructive",
+        onPress: () => {
+          const current = getTransactions()
+          setLastSnapshot(current)
+
+          if (!selection.durationMs) {
+            setTransactions([])
+            return
+          }
+
+          const cutoff = Date.now() - selection.durationMs
+          const remaining = current.filter(
+            transaction => transaction.timestamp < cutoff
+          )
+          setTransactions(remaining)
+        },
+      },
+    ])
+  }
+
+  const handleUndoClear = () => {
+    if (!lastSnapshot) return
+    setTransactions(lastSnapshot)
+    setLastSnapshot(null)
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -105,6 +160,53 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             )
           })}
+        </View>
+
+        <View style={[styles.card, styles.cardSpacing]}>
+          <Text style={styles.sectionTitle}>{t("clearHistory")}</Text>
+          <Text style={styles.helperText}>
+            {t("clearHistoryHelper")}
+          </Text>
+          <View style={styles.rangeRow}>
+            {clearHistoryOptions.map((option, index) => {
+              const isActive = index === selectedRange
+              return (
+                <TouchableOpacity
+                  key={option.label}
+                  style={[
+                    styles.rangeOption,
+                    isActive && styles.rangeOptionActive,
+                  ]}
+                  onPress={() => setSelectedRange(index)}
+                >
+                  <Text
+                    style={[
+                      styles.rangeLabel,
+                      isActive && styles.rangeLabelActive,
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                </TouchableOpacity>
+              )
+            })}
+          </View>
+          <View style={styles.actionRow}>
+            <TouchableOpacity
+              style={styles.clearButton}
+              onPress={handleClearHistory}
+            >
+              <Text style={styles.clearAction}>{t("clear")}</Text>
+            </TouchableOpacity>
+            {lastSnapshot ? (
+              <TouchableOpacity
+                style={styles.undoButton}
+                onPress={handleUndoClear}
+              >
+                <Text style={styles.undoAction}>{t("undo")}</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -179,5 +281,61 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#777",
     marginBottom: 12,
+  },
+  rangeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 12,
+  },
+  rangeOption: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    backgroundColor: "#fff",
+  },
+  rangeOptionActive: {
+    borderColor: "#2c7a7b",
+    backgroundColor: "#e6f6f6",
+  },
+  rangeLabel: {
+    fontSize: 12,
+    color: "#444",
+    fontWeight: "600",
+  },
+  rangeLabelActive: {
+    color: "#1f5f5f",
+  },
+  actionRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  clearButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: "#fff1f1",
+    borderWidth: 1,
+    borderColor: "#f3b3b3",
+  },
+  clearAction: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#cc4c4c",
+  },
+  undoButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: "#f0f4f8",
+    borderWidth: 1,
+    borderColor: "#d5dde5",
+  },
+  undoAction: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#34495e",
   },
 })
