@@ -212,6 +212,7 @@ export default function InsightsScreen() {
     const productSummaries = rangeTx.reduce(
       (acc, tx) => {
         const current = acc[tx.productId] ?? {
+          id: tx.productId,
           name: tx.productName,
           revenue: 0,
           expenses: 0,
@@ -227,7 +228,7 @@ export default function InsightsScreen() {
       },
       {} as Record<
         number,
-        { name: string; revenue: number; expenses: number }
+        { id: number; name: string; revenue: number; expenses: number }
       >
     )
 
@@ -352,7 +353,7 @@ export default function InsightsScreen() {
           </View>
           {productSummaries.length ? (
             productSummaries.map(product => (
-              <View key={product.name} style={styles.productRow}>
+              <View key={product.id} style={styles.productRow}>
                 <Text style={styles.productName}>{product.name}</Text>
                 <View style={styles.productTotals}>
                   <Text style={styles.productValue}>
