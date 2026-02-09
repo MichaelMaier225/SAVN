@@ -11,9 +11,12 @@ export default function TabLayout() {
   const colors = Colors[colorScheme ?? "light"]
 
   const renderTabIcon =
-    (name: Parameters<typeof IconSymbol>[0]["name"]) =>
+    (
+      name: Parameters<typeof IconSymbol>[0]["name"],
+      size = 22
+    ) =>
     ({ color }: { color: string }) =>
-      <IconSymbol name={name} color={color} size={22} />
+      <IconSymbol name={name} color={color} size={size} />
 
   return (
     <Tabs
@@ -33,54 +36,40 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="explore"
+        name="index"
         options={{
-          title: t("explore"),
-          tabBarIcon: renderTabIcon("compass.fill"),
-        }}
-      />
-      <Tabs.Screen
-        name="history"
-        options={{
-          title: t("history"),
-          tabBarIcon: renderTabIcon("clock.fill"),
+          title: "Home",
+          tabBarIcon: renderTabIcon("house.fill"),
         }}
       />
       <Tabs.Screen
         name="catalog"
         options={{
-          title: t("vendors"),
-          tabBarIcon: renderTabIcon("building.2.fill"),
+          title: "Add",
+          tabBarIcon: renderTabIcon("plus.circle.fill", 30),
+          tabBarActiveTintColor: colors.tint,
+          tabBarIconStyle: { marginTop: -4 },
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="history"
         options={{
-          title: t("inventory"),
-          tabBarIcon: renderTabIcon("tray.full.fill"),
-        }}
-      />
-      <Tabs.Screen
-        name="analytics"
-        options={{
-          title: t("analytics"),
-          tabBarIcon: renderTabIcon("chart.bar.fill"),
-        }}
-      />
-      <Tabs.Screen
-        name="insights"
-        options={{
-          title: t("insights"),
-          tabBarIcon: renderTabIcon("lightbulb.fill"),
+          title: "History",
+          tabBarIcon: renderTabIcon("clock.fill"),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: t("settings"),
-          tabBarIcon: renderTabIcon("gearshape.fill"),
+          title: "More",
+          tabBarIcon: renderTabIcon("line.3.horizontal"),
         }}
       />
+
+      {/* Hidden routes kept for nested navigation from the More tab. */}
+      <Tabs.Screen name="explore" options={{ href: null }} />
+      <Tabs.Screen name="analytics" options={{ href: null }} />
+      <Tabs.Screen name="insights" options={{ href: null }} />
     </Tabs>
   )
 }
