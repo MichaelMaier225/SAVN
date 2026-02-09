@@ -23,7 +23,6 @@ type TranslationKey =
   | "clearHistoryHelper"
   | "clearHistoryWarningTitle"
   | "clearHistoryWarningBody"
-  | "clearHistoryUndoHelper"
   | "currency"
   | "currencyHelper"
   | "daysTracked"
@@ -169,12 +168,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     clear: "Clear",
     clearHistory: "Clear history",
     clearHistoryHelper:
-      "Remove history entries from the last hour, day, week, month, or all time.",
+      "Select a range to remove history entries.",
     clearHistoryWarningTitle: "Clear history?",
     clearHistoryWarningBody:
-      "This will remove matching history entries. You can undo this once.",
-    clearHistoryUndoHelper:
-      "Undo is available for the last clear action.",
+      "This will remove matching history entries.",
     currency: "Currency",
     currencyHelper: "Choose the currency symbol for prices.",
     daysTracked: "Days tracked",
@@ -331,12 +328,10 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     clear: "Xóa",
     clearHistory: "Xóa lịch sử",
     clearHistoryHelper:
-      "Xóa các mục lịch sử trong giờ, ngày, tuần, tháng hoặc mọi thời gian.",
+      "Chọn khoảng thời gian để xóa lịch sử giao dịch.",
     clearHistoryWarningTitle: "Xóa lịch sử?",
     clearHistoryWarningBody:
-      "Thao tác này sẽ xóa các mục lịch sử tương ứng. Bạn có thể hoàn tác một lần.",
-    clearHistoryUndoHelper:
-      "Bạn có thể hoàn tác lần xóa lịch sử gần nhất.",
+      "Thao tác này sẽ xóa các mục lịch sử tương ứng.",
     currency: "Tiền tệ",
     currencyHelper: "Chọn ký hiệu tiền tệ cho giá.",
     daysTracked: "Số ngày theo dõi",
