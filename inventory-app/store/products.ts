@@ -414,6 +414,23 @@ export const removeProduct = (id: number) => {
   saveState()
 }
 
+export const clearHistory = (durationMs: number | null) => {
+  snapshot()
+
+  if (!durationMs) {
+    setTransactions([])
+    saveState()
+    return
+  }
+
+  const cutoff = Date.now() - durationMs
+  const remaining = getTransactions().filter(
+    transaction => transaction.timestamp < cutoff
+  )
+  setTransactions(remaining)
+  saveState()
+}
+
 export const undoLastAction = () => {
   if (!previousState) return
 

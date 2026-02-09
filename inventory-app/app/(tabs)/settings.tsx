@@ -5,15 +5,16 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from "react-native"
 
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
 import { Currency, Language } from "../../store/settings"
 import {
-  getTransactions,
-  setTransactions,
-} from "../../store/transactions"
+  clearHistory,
+  undoLastAction,
+} from "../../store/products"
 
 const languageOptions: Array<{
   value: Language
@@ -36,6 +37,7 @@ export default function SettingsScreen() {
   const { language, setLanguage, t } = useLanguage()
   const [updating, setUpdating] = useState<Language | null>(null)
   const { currency, setCurrency } = useCurrency()
+  const [canUndoClear, setCanUndoClear] = useState(false)
 
   const handleSelect = async (next: Language) => {
     setUpdating(next)
@@ -58,18 +60,33 @@ export default function SettingsScreen() {
     { label: t("monthly"), durationMs: 30 * 24 * 60 * 60 * 1000 },
     { label: t("allTime"), durationMs: null },
   ]
+  const clearActionLabel = canUndoClear ? t("undo") : t("clear")
 
   const handleClearHistory = (durationMs: number | null) => {
-    if (!durationMs) {
-      setTransactions([])
+    if (canUndoClear) {
+      undoLastAction()
+      setCanUndoClear(false)
       return
     }
 
-    const cutoff = Date.now() - durationMs
-    const remaining = getTransactions().filter(
-      transaction => transaction.timestamp < cutoff
+    Alert.alert(
+      t("clearHistoryWarningTitle"),
+      t("clearHistoryWarningBody"),
+      [
+        {
+          text: t("cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("clear"),
+          style: "destructive",
+          onPress: () => {
+            clearHistory(durationMs)
+            setCanUndoClear(true)
+          },
+        },
+      ]
     )
-    setTransactions(remaining)
   }
 
   return (
@@ -137,6 +154,11 @@ export default function SettingsScreen() {
           <Text style={styles.helperText}>
             {t("clearHistoryHelper")}
           </Text>
+          {canUndoClear ? (
+            <Text style={styles.helperText}>
+              {t("clearHistoryUndoHelper")}
+            </Text>
+          ) : null}
           {clearHistoryOptions.map(option => (
             <TouchableOpacity
               key={option.label}
@@ -144,7 +166,9 @@ export default function SettingsScreen() {
               onPress={() => handleClearHistory(option.durationMs)}
             >
               <Text style={styles.optionLabel}>{option.label}</Text>
-              <Text style={styles.clearAction}>{t("clear")}</Text>
+              <Text style={styles.clearAction}>
+                {clearActionLabel}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
