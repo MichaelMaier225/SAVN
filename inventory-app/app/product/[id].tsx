@@ -17,6 +17,7 @@ import {
   setProductInventory,
   Product,
 } from "../../store/products"
+import { BrandColors } from "../../constants/brand"
 
 export default function ProductEditScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -161,7 +162,7 @@ export default function ProductEditScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -170,56 +171,60 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
+    color: BrandColors.textOnBrand,
   },
   label: {
     fontSize: 14,
     marginBottom: 6,
-    color: "#555",
+    color: BrandColors.textOnBrandMuted,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 12,
     padding: 12,
     marginBottom: 15,
+    backgroundColor: BrandColors.card,
+    color: BrandColors.textPrimary,
   },
   helper: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textOnBrandMuted,
     marginBottom: 12,
   },
   inventoryBtn: {
-    backgroundColor: "#111",
+    backgroundColor: BrandColors.accent,
     padding: 14,
-    borderRadius: 6,
+    borderRadius: 12,
     alignItems: "center",
     marginBottom: 20,
   },
   inventoryText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontWeight: "bold",
   },
   saveBtn: {
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
     padding: 15,
-    borderRadius: 6,
+    borderRadius: 12,
     alignItems: "center",
     marginTop: 10,
   },
   saveText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontWeight: "bold",
   },
   deleteBtn: {
     marginTop: 30,
     padding: 14,
-    borderRadius: 6,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e00",
+    borderColor: BrandColors.accent,
     alignItems: "center",
+    backgroundColor: BrandColors.accentSoft,
   },
   deleteText: {
-    color: "#e00",
+    color: BrandColors.accentDark,
     fontWeight: "bold",
   },
 })

@@ -1,0 +1,15 @@
+export const BrandColors = {
+  background: "#d63c35",
+  backgroundDark: "#b72b26",
+  card: "#ffffff",
+  cardAlt: "#fff3f2",
+  cardBorder: "#f2d6d4",
+  textOnBrand: "#ffffff",
+  textOnBrandMuted: "rgba(255, 255, 255, 0.75)",
+  textPrimary: "#2e130f",
+  textSecondary: "#6a3a35",
+  accent: "#f04c45",
+  accentDark: "#b8241f",
+  accentSoft: "#ffe3e1",
+  success: "#36b37e",
+};

@@ -16,6 +16,7 @@ import {
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
 import { InsightsSwitcher } from "../../components/insights-switcher"
+import { BrandColors } from "../../constants/brand"
 
 export default function AnalyticsScreen() {
   const [products, setProducts] = useState<Product[]>([])
@@ -371,7 +372,7 @@ export default function AnalyticsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -381,12 +382,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 10,
+    color: BrandColors.textOnBrand,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "600",
     marginTop: 10,
     marginBottom: 10,
+    color: BrandColors.textOnBrand,
   },
   grid: {
     flexDirection: "row",
@@ -396,40 +399,41 @@ const styles = StyleSheet.create({
   card: {
     padding: 14,
     borderWidth: 1,
-    borderColor: "#e3e3e3",
-    borderRadius: 10,
-    backgroundColor: "#fafafa",
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 14,
+    backgroundColor: BrandColors.card,
     width: "48%",
     marginBottom: 12,
   },
   cardWide: {
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e3e3e3",
-    borderRadius: 12,
-    backgroundColor: "#fff",
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 16,
+    backgroundColor: BrandColors.card,
     marginBottom: 16,
   },
   cardTitle: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#555",
+    color: BrandColors.textSecondary,
     marginBottom: 6,
   },
   metric: {
     fontSize: 20,
     fontWeight: "700",
     marginBottom: 6,
+    color: BrandColors.textPrimary,
   },
   detail: {
     fontSize: 13,
-    color: "#555",
+    color: BrandColors.textSecondary,
     marginBottom: 2,
   },
   detailBold: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#222",
+    color: BrandColors.textPrimary,
     marginTop: 4,
   },
   row: {
@@ -443,16 +447,17 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginBottom: 4,
   },
   value: {
     fontSize: 16,
     fontWeight: "600",
+    color: BrandColors.textPrimary,
   },
   helper: {
     fontSize: 13,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginTop: 4,
   },
   lowStockList: {

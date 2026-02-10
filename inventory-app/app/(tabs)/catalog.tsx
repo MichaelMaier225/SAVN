@@ -23,6 +23,7 @@ import {
 } from "../../store/products"
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
+import { BrandColors } from "../../constants/brand"
 
 export default function CatalogScreen() {
   const [products, setProducts] = useState<Product[]>([])
@@ -185,7 +186,7 @@ export default function CatalogScreen() {
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>{t("newProduct")}</Text>
+          <Text style={styles.cardTitle}>{t("newProduct")}</Text>
           <TextInput
             style={styles.input}
             placeholder={t("productName")}
@@ -355,7 +356,7 @@ export default function CatalogScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -365,30 +366,33 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 6,
+    color: BrandColors.textOnBrand,
   },
   subtitle: {
-    color: "#555",
+    color: BrandColors.textOnBrandMuted,
     marginBottom: 20,
   },
   card: {
     borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 12,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 20,
+    backgroundColor: BrandColors.card,
   },
   searchCard: {
     borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 12,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 20,
-    backgroundColor: "#fafafa",
+    backgroundColor: BrandColors.card,
   },
   searchLabel: {
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 10,
+    color: BrandColors.textPrimary,
   },
   section: {
     marginBottom: 20,
@@ -397,27 +401,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
+    color: BrandColors.textOnBrand,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 12,
+    color: BrandColors.textPrimary,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: BrandColors.cardBorder,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 12,
+    backgroundColor: BrandColors.cardAlt,
+    color: BrandColors.textPrimary,
   },
   helper: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginBottom: 12,
   },
   button: {
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
     paddingVertical: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontWeight: "600",
   },
   row: {
@@ -425,8 +438,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    paddingHorizontal: 12,
+    borderRadius: 14,
+    backgroundColor: BrandColors.card,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 1,
   },
   rowInfo: {
     flex: 1,
@@ -439,43 +459,44 @@ const styles = StyleSheet.create({
   rowName: {
     fontSize: 16,
     fontWeight: "600",
+    color: BrandColors.textPrimary,
   },
   rowMeta: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginTop: 4,
   },
   actionButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   deactivateButton: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: BrandColors.accentSoft,
   },
   editButton: {
-    backgroundColor: "#111",
+    backgroundColor: BrandColors.accent,
   },
   activateButton: {
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
   },
   deleteButton: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: BrandColors.accentSoft,
   },
   actionText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#111",
+    color: BrandColors.accentDark,
   },
   actionTextLight: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
   },
   emptyText: {
-    color: "#888",
+    color: BrandColors.textOnBrandMuted,
     fontSize: 13,
   },
   emptyHint: {
-    color: "#888",
+    color: BrandColors.textOnBrandMuted,
     fontSize: 12,
     marginTop: -4,
   },
@@ -488,32 +509,35 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: BrandColors.card,
+    borderRadius: 18,
     padding: 20,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 16,
+    color: BrandColors.textPrimary,
   },
   modalLabel: {
     fontSize: 14,
     marginBottom: 6,
-    color: "#555",
+    color: BrandColors.textSecondary,
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 12,
+    backgroundColor: BrandColors.cardAlt,
+    color: BrandColors.textPrimary,
   },
   modalHint: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginBottom: 12,
   },
   modalActions: {
@@ -524,23 +548,23 @@ const styles = StyleSheet.create({
   modalButton: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
   },
   modalCancel: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: BrandColors.accentSoft,
     marginRight: 10,
   },
   modalConfirm: {
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
     marginLeft: 10,
   },
   modalCancelText: {
-    color: "#333",
+    color: BrandColors.accentDark,
     fontWeight: "600",
   },
   modalConfirmText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontWeight: "600",
   },
 })

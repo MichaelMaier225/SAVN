@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { usePathname, useRouter } from "expo-router"
 
 import { useLanguage } from "../hooks/use-language"
+import { BrandColors } from "../constants/brand"
 
 const routes = [
   { key: "analytics", path: "/analytics" },
@@ -45,7 +46,7 @@ export function InsightsSwitcher() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#f1f1f1",
+    backgroundColor: BrandColors.backgroundDark,
     borderRadius: 999,
     padding: 4,
     marginTop: 12,
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   pillActive: {
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.card,
     shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 6,
@@ -68,9 +69,9 @@ const styles = StyleSheet.create({
   pillText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#666",
+    color: BrandColors.textOnBrandMuted,
   },
   pillTextActive: {
-    color: "#1b1b1b",
+    color: BrandColors.textPrimary,
   },
 })

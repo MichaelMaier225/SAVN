@@ -8,6 +8,7 @@ import {
 
 import { useLanguage } from "../../hooks/use-language"
 import { InsightsSwitcher } from "../../components/insights-switcher"
+import { BrandColors } from "../../constants/brand"
 
 export default function ExploreScreen() {
   const { t } = useLanguage()
@@ -107,7 +108,7 @@ export default function ExploreScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -117,26 +118,28 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 4,
+    color: BrandColors.textOnBrand,
   },
   subtitle: {
-    color: "#555",
+    color: BrandColors.textOnBrandMuted,
     marginBottom: 20,
   },
   card: {
     borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 12,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    backgroundColor: "#fafafa",
+    backgroundColor: BrandColors.card,
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 6,
+    color: BrandColors.textPrimary,
   },
   cardBody: {
-    color: "#555",
+    color: BrandColors.textSecondary,
     lineHeight: 20,
   },
 })
