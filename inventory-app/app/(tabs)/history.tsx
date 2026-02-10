@@ -127,7 +127,7 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   row: {
     padding: 14,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   empty: {
     textAlign: "center",
     marginTop: 40,
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     lineHeight: 20,
   },
 })

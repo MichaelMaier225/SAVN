@@ -108,7 +108,7 @@ export default function ExploreScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -118,10 +118,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 4,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   subtitle: {
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     marginBottom: 20,
   },
   card: {
