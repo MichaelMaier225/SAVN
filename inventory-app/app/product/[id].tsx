@@ -162,7 +162,7 @@ export default function ProductEditScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -171,12 +171,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   label: {
     fontSize: 14,
     marginBottom: 6,
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
   },
   input: {
     borderWidth: 1,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   helper: {
     fontSize: 12,
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     marginBottom: 12,
   },
   inventoryBtn: {

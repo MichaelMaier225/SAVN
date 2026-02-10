@@ -476,7 +476,7 @@ export default function InsightsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -491,11 +491,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   subtitle: {
     fontSize: 14,
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     marginTop: 4,
   },
   dropdownWrapper: {
@@ -572,7 +572,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: 10,
     marginBottom: 10,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   productCard: {
     borderRadius: 16,

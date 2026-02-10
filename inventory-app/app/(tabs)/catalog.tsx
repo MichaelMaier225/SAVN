@@ -356,7 +356,7 @@ export default function CatalogScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -366,10 +366,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 6,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   subtitle: {
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     marginBottom: 20,
   },
   card: {
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   cardTitle: {
     fontSize: 16,
@@ -492,11 +492,11 @@ const styles = StyleSheet.create({
     color: BrandColors.textOnBrand,
   },
   emptyText: {
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     fontSize: 13,
   },
   emptyHint: {
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     fontSize: 12,
     marginTop: -4,
   },

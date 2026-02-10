@@ -240,7 +240,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 6,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   cardSpacing: {
     marginTop: 16,

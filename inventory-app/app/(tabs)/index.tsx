@@ -412,7 +412,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -422,15 +422,15 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
     marginBottom: 10,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   summaryText: {
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
   },
   profit: {
     fontWeight: "bold",
     marginBottom: 10,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   row: {
     flexDirection: "row",
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
   helperText: {
     marginTop: "auto",
     textAlign: "center",
-    color: BrandColors.textOnBrandMuted,
+    color: BrandColors.textSecondary,
     fontSize: 13,
     paddingTop: 10,
   },

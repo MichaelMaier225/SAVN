@@ -372,7 +372,7 @@ export default function AnalyticsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: BrandColors.background,
+    backgroundColor: BrandColors.pageBackground,
   },
   container: {
     padding: 20,
@@ -382,14 +382,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 10,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "600",
     marginTop: 10,
     marginBottom: 10,
-    color: BrandColors.textOnBrand,
+    color: BrandColors.headerBackground,
   },
   grid: {
     flexDirection: "row",
