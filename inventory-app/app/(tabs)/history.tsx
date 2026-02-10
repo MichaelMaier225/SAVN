@@ -14,6 +14,7 @@ import { getTransactions, Transaction } from "../../store/transactions"
 import { undoTransaction } from "../../store/products"
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
+import { BrandColors } from "../../constants/brand"
 
 const formatTime = (timestamp: number) => {
   const date = new Date(timestamp)
@@ -93,6 +94,7 @@ export default function HistoryScreen() {
         <FlatList
           data={transactions}
           keyExtractor={item => String(item.id)}
+          contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => (
             <View style={styles.separator} />
           )}
@@ -125,19 +127,30 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
     flex: 1,
   },
+  list: {
+    paddingBottom: 12,
+  },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
+    color: BrandColors.textOnBrand,
   },
   row: {
-    paddingVertical: 10,
+    padding: 14,
+    borderRadius: 16,
+    backgroundColor: BrandColors.card,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
   },
   rowHeader: {
     flexDirection: "row",
@@ -148,24 +161,24 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     flex: 1,
+    color: BrandColors.textPrimary,
   },
   time: {
     fontSize: 12,
-    color: "#777",
+    color: BrandColors.textSecondary,
     marginTop: 2,
   },
   undo: {
     fontSize: 13,
-    color: "#888",
+    color: BrandColors.accentDark,
   },
   separator: {
-    height: 1,
-    backgroundColor: "#eee",
+    height: 12,
   },
   empty: {
     textAlign: "center",
     marginTop: 40,
-    color: "#777",
+    color: BrandColors.textOnBrandMuted,
     lineHeight: 20,
   },
 })

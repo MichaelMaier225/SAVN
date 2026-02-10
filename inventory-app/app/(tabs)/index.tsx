@@ -23,6 +23,7 @@ import {
 } from "../../store/products"
 import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
+import { BrandColors } from "../../constants/brand"
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([])
@@ -211,10 +212,10 @@ export default function HomeScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>SAVN</Text>
 
-        <Text>
+        <Text style={styles.summaryText}>
           {t("revenue")}: {formatMoney(revenue)}
         </Text>
-        <Text>
+        <Text style={styles.summaryText}>
           {t("expenses")}: {formatMoney(expenses)}
         </Text>
         <Text style={styles.profit}>
@@ -411,7 +412,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -421,22 +422,36 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
     marginBottom: 10,
+    color: BrandColors.textOnBrand,
+  },
+  summaryText: {
+    color: BrandColors.textOnBrandMuted,
   },
   profit: {
     fontWeight: "bold",
     marginBottom: 10,
+    color: BrandColors.textOnBrand,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 16,
+    padding: 14,
+    borderRadius: 16,
+    backgroundColor: BrandColors.card,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
   },
   nameWrap: {
     flex: 1,
   },
   name: {
     fontSize: 18,
+    color: BrandColors.textPrimary,
   },
   controls: {
     flexDirection: "row",
@@ -446,16 +461,17 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
     alignItems: "center",
     justifyContent: "center",
   },
   btnText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontSize: 26,
   },
   qty: {
     marginHorizontal: 10,
+    color: BrandColors.textPrimary,
   },
   undoBtn: {
     marginLeft: 10,
@@ -463,55 +479,56 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#bbb",
+    borderColor: BrandColors.cardBorder,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "transparent",
+    backgroundColor: BrandColors.cardAlt,
   },
   undoDisabled: {
-    borderColor: "#ddd",
+    borderColor: BrandColors.cardBorder,
   },
   undoText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: BrandColors.textSecondary,
   },
   undoTextDisabled: {
-    color: "#ccc",
+    color: BrandColors.cardBorder,
   },
   helperText: {
     marginTop: "auto",
     textAlign: "center",
-    color: "#888",
+    color: BrandColors.textOnBrandMuted,
     fontSize: 13,
     paddingTop: 10,
   },
   emptyCard: {
     marginTop: 24,
     borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 12,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 16,
     padding: 16,
-    backgroundColor: "#fafafa",
+    backgroundColor: BrandColors.card,
   },
   emptyTitle: {
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 6,
+    color: BrandColors.textPrimary,
   },
   emptyBody: {
-    color: "#555",
+    color: BrandColors.textSecondary,
     marginBottom: 12,
     lineHeight: 20,
   },
   emptyButton: {
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: "center",
   },
   emptyButtonText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontWeight: "600",
   },
   modalOverlay: {
@@ -523,32 +540,35 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: BrandColors.card,
+    borderRadius: 18,
     padding: 20,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 16,
+    color: BrandColors.textPrimary,
   },
   modalLabel: {
     fontSize: 14,
     marginBottom: 6,
-    color: "#555",
+    color: BrandColors.textSecondary,
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 12,
+    backgroundColor: BrandColors.cardAlt,
+    color: BrandColors.textPrimary,
   },
   modalHint: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginBottom: 12,
   },
   modalActions: {
@@ -559,23 +579,23 @@ const styles = StyleSheet.create({
   modalButton: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
   },
   modalCancel: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: BrandColors.accentSoft,
     marginRight: 10,
   },
   modalConfirm: {
-    backgroundColor: "#000",
+    backgroundColor: BrandColors.accent,
     marginLeft: 10,
   },
   modalCancelText: {
-    color: "#333",
+    color: BrandColors.accentDark,
     fontWeight: "600",
   },
   modalConfirmText: {
-    color: "#fff",
+    color: BrandColors.textOnBrand,
     fontWeight: "600",
   },
 })

@@ -14,6 +14,7 @@ import { getTransactions, Transaction } from "../../store/transactions"
 import { useCurrency } from "../../hooks/use-currency"
 import { useLanguage } from "../../hooks/use-language"
 import { InsightsSwitcher } from "../../components/insights-switcher"
+import { BrandColors } from "../../constants/brand"
 
 type RangeKey =
   | "hourly"
@@ -475,7 +476,7 @@ export default function InsightsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -490,10 +491,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
+    color: BrandColors.textOnBrand,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666",
+    color: BrandColors.textOnBrandMuted,
     marginTop: 4,
   },
   dropdownWrapper: {
@@ -504,27 +506,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
-    backgroundColor: "#f8f8f8",
+    borderColor: BrandColors.cardBorder,
+    backgroundColor: BrandColors.card,
     gap: 6,
   },
   dropdownLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#333",
+    color: BrandColors.textPrimary,
   },
   dropdownCaret: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
   },
   dropdownMenu: {
     marginTop: 8,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
-    backgroundColor: "#fff",
+    borderColor: BrandColors.cardBorder,
+    backgroundColor: BrandColors.card,
     width: 150,
     paddingVertical: 6,
   },
@@ -534,12 +536,12 @@ const styles = StyleSheet.create({
   },
   dropdownItemText: {
     fontSize: 14,
-    color: "#333",
+    color: BrandColors.textPrimary,
   },
   dropdownItemActive: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#1f6feb",
+    color: BrandColors.accent,
   },
   summaryRow: {
     flexDirection: "row",
@@ -550,31 +552,33 @@ const styles = StyleSheet.create({
   summaryCard: {
     width: "48%",
     padding: 14,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#eee",
-    backgroundColor: "#fafafa",
+    borderColor: BrandColors.cardBorder,
+    backgroundColor: BrandColors.card,
   },
   summaryLabel: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginBottom: 6,
   },
   summaryValue: {
     fontSize: 16,
     fontWeight: "700",
+    color: BrandColors.textPrimary,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     marginTop: 10,
     marginBottom: 10,
+    color: BrandColors.textOnBrand,
   },
   productCard: {
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#ececec",
-    backgroundColor: "#fff",
+    borderColor: BrandColors.cardBorder,
+    backgroundColor: BrandColors.card,
     padding: 14,
     marginBottom: 16,
   },
@@ -590,20 +594,20 @@ const styles = StyleSheet.create({
   productHeader: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#666",
+    color: BrandColors.textSecondary,
   },
   productRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: BrandColors.cardBorder,
   },
   productName: {
     flex: 1,
     fontSize: 14,
     fontWeight: "600",
-    color: "#222",
+    color: BrandColors.textPrimary,
     marginRight: 12,
   },
   productTotals: {
@@ -613,29 +617,29 @@ const styles = StyleSheet.create({
   productValue: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#1f6feb",
+    color: BrandColors.accent,
   },
   productValueAlt: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#f58a3c",
+    color: BrandColors.accentDark,
   },
   productEmpty: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     textAlign: "center",
     paddingVertical: 12,
   },
   productNote: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginTop: 10,
   },
   chartCard: {
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#ececec",
-    backgroundColor: "#fff",
+    borderColor: BrandColors.cardBorder,
+    backgroundColor: BrandColors.card,
     padding: 14,
     marginBottom: 16,
   },
@@ -652,16 +656,16 @@ const styles = StyleSheet.create({
   chartBar: {
     width: 18,
     borderRadius: 6,
-    backgroundColor: "#2f7ff7",
+    backgroundColor: BrandColors.accent,
   },
   chartLabel: {
     fontSize: 10,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginTop: 6,
   },
   chartNote: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginTop: 8,
   },
   compareRow: {
@@ -672,29 +676,30 @@ const styles = StyleSheet.create({
   },
   compareLabel: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginBottom: 4,
   },
   compareBarTrack: {
     height: 8,
     borderRadius: 999,
-    backgroundColor: "#eef3fb",
+    backgroundColor: BrandColors.cardAlt,
     overflow: "hidden",
   },
   compareBarFill: {
     height: 8,
     borderRadius: 999,
-    backgroundColor: "#2f7ff7",
+    backgroundColor: BrandColors.accent,
   },
   compareBarFillAlt: {
     height: 8,
     borderRadius: 999,
-    backgroundColor: "#f58a3c",
+    backgroundColor: BrandColors.accentDark,
   },
   compareValue: {
     fontSize: 13,
     fontWeight: "600",
     marginTop: 6,
+    color: BrandColors.textPrimary,
   },
   salesCountRow: {
     marginTop: 10,
@@ -710,24 +715,24 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontSize: 12,
     fontWeight: "600",
-    color: "#333",
+    color: BrandColors.textPrimary,
   },
   countBarTrack: {
     flex: 1,
     height: 6,
     borderRadius: 999,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: BrandColors.cardAlt,
     overflow: "hidden",
   },
   countBarFill: {
     height: 6,
     borderRadius: 999,
-    backgroundColor: "#4bb543",
+    backgroundColor: BrandColors.success,
   },
   countLabel: {
     width: 52,
     fontSize: 10,
-    color: "#666",
+    color: BrandColors.textSecondary,
     textAlign: "right",
   },
 })

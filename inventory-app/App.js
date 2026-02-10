@@ -9,7 +9,7 @@ const App = () => {
   return (
     <TransactionsProvider>
       <NavigationContainer>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
         <RootNavigator />
       </NavigationContainer>
     </TransactionsProvider>

@@ -4,6 +4,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme"
 import { Colors } from "@/constants/theme"
 import { IconSymbol } from "@/components/ui/icon-symbol"
 import { useLanguage } from "../../hooks/use-language"
+import { BrandColors } from "../../constants/brand"
 
 export default function TabLayout() {
   const { t } = useLanguage()
@@ -27,11 +28,13 @@ export default function TabLayout() {
         tabBarLabelStyle: { fontSize: 10, fontWeight: "600" },
         tabBarStyle: {
           backgroundColor: colors.background,
-          borderTopColor: colors.icon,
-          borderTopWidth: 0.5,
+          borderTopColor: BrandColors.backgroundDark,
+          borderTopWidth: 0,
           paddingTop: 6,
           paddingBottom: 8,
           height: 62,
+          elevation: 0,
+          shadowOpacity: 0,
         },
       }}
     >

@@ -14,6 +14,7 @@ import { useLanguage } from "../../hooks/use-language"
 import { useCurrency } from "../../hooks/use-currency"
 import { Currency, Language } from "../../store/settings"
 import { clearHistory } from "../../store/products"
+import { BrandColors } from "../../constants/brand"
 
 const languageOptions: Array<{
   value: Language
@@ -239,7 +240,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BrandColors.background,
   },
   container: {
     padding: 20,
@@ -249,16 +250,17 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 6,
+    color: BrandColors.textOnBrand,
   },
   cardSpacing: {
     marginTop: 16,
   },
   card: {
     borderWidth: 1,
-    borderColor: "#e3e3e3",
-    borderRadius: 12,
+    borderColor: BrandColors.cardBorder,
+    borderRadius: 16,
     padding: 16,
-    backgroundColor: "#fafafa",
+    backgroundColor: BrandColors.card,
   },
   linkRow: {
     flexDirection: "row",
@@ -266,12 +268,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: BrandColors.cardBorder,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
+    color: BrandColors.textPrimary,
   },
   optionRow: {
     flexDirection: "row",
@@ -279,11 +282,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: BrandColors.cardBorder,
   },
   optionRowActive: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
+    backgroundColor: BrandColors.cardAlt,
+    borderRadius: 12,
     paddingHorizontal: 10,
   },
   optionText: {
@@ -292,39 +295,40 @@ const styles = StyleSheet.create({
   optionLabel: {
     fontSize: 15,
     fontWeight: "600",
+    color: BrandColors.textPrimary,
   },
   optionDetail: {
     fontSize: 12,
-    color: "#666",
+    color: BrandColors.textSecondary,
     marginTop: 2,
   },
   linkChevron: {
     width: 24,
     textAlign: "center",
     fontSize: 22,
-    color: "#999",
+    color: BrandColors.textSecondary,
   },
   optionStatus: {
     width: 24,
     textAlign: "center",
     fontSize: 18,
-    color: "#2c7a7b",
+    color: BrandColors.accentDark,
   },
   helperText: {
     fontSize: 12,
-    color: "#777",
+    color: BrandColors.textSecondary,
     marginBottom: 12,
   },
   clearButton: {
     marginTop: 8,
-    backgroundColor: "#cc4c4c",
+    backgroundColor: BrandColors.accent,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
   },
   clearButtonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: BrandColors.textOnBrand,
   },
 })
