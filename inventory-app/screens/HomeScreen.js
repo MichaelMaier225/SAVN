@@ -1,5 +1,12 @@
 import React, { useContext, useMemo } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { TransactionsContext } from "../store/TransactionsContext";
@@ -16,54 +23,116 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { transactions } = useContext(TransactionsContext);
 
-  const todaysTotals = useMemo(() => {
-    return transactions.filter((transaction) => isToday(transaction.createdAt)).reduce(
-      (acc, transaction) => {
-        if (transaction.type === "sale") {
-          acc.sales += transaction.amount;
-        } else {
-          acc.costs += transaction.amount;
-        }
-        acc.net = acc.sales - acc.costs;
-        return acc;
-      },
-      { sales: 0, costs: 0, net: 0 }
+  const todayStats = useMemo(() => {
+    const todaysTransactions = transactions.filter((transaction) =>
+      isToday(transaction.createdAt)
     );
+    const sales = todaysTransactions.filter((transaction) => transaction.type === "sale");
+    const costs = todaysTransactions.filter((transaction) => transaction.type === "cost");
+    const salesTotal = sales.reduce((acc, transaction) => acc + transaction.amount, 0);
+    const costsTotal = costs.reduce((acc, transaction) => acc + transaction.amount, 0);
+    const net = salesTotal - costsTotal;
+    return {
+      salesTotal,
+      costsTotal,
+      net,
+      salesCount: sales.length,
+      costsCount: costs.length,
+      averageSale: sales.length ? salesTotal / sales.length : 0,
+    };
+  }, [transactions]);
+
+  const menuItems = useMemo(() => {
+    const fallbackItems = [
+      { name: "Pork Sandwich", price: 5.8 },
+      { name: "Pho Beef Noodle", price: 6.3 },
+      { name: "Spicy Goun Fresh Spring", price: 4.5 },
+      { name: "Iced Coffee", price: 2.4 },
+    ];
+
+    if (!transactions.length) {
+      return fallbackItems;
+    }
+
+    return transactions.slice(0, 4).map((transaction, index) => ({
+      name: transaction.description || `Item ${index + 1}`,
+      price: transaction.amount,
+    }));
   }, [transactions]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Today&apos;s Totals</Text>
+        <Text style={styles.brand}>SAVN</Text>
+        <Text style={styles.settingsIcon}>⚙</Text>
       </View>
-      <View style={styles.totalsCard}>
-        <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Sales</Text>
-          <Text style={styles.totalValue}>{formatCurrency(todaysTotals.sales)}</Text>
+
+      <View style={styles.segmentedControl}>
+        <View style={[styles.segment, styles.segmentActive]}>
+          <Text style={styles.segmentTextActive}>Executive</Text>
         </View>
-        <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Costs</Text>
-          <Text style={styles.totalValue}>{formatCurrency(todaysTotals.costs)}</Text>
-        </View>
-        <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Net</Text>
-          <Text style={styles.netValue}>{formatCurrency(todaysTotals.net)}</Text>
+        <View style={styles.segment}>
+          <Text style={styles.segmentText}>Analytics</Text>
         </View>
       </View>
-      <View style={styles.actions}>
-        <Pressable
-          style={styles.primaryButton}
-          onPress={() => navigation.navigate("Add", { type: "sale" })}
-        >
-          <Text style={styles.primaryButtonText}>Add Sale</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.primaryButton, styles.secondaryButton]}
-          onPress={() => navigation.navigate("Add", { type: "cost" })}
-        >
-          <Text style={styles.primaryButtonText}>Add Cost</Text>
-        </Pressable>
-      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.cardRow}>
+          <View style={[styles.statCard, styles.statCardPrimary]}>
+            <Text style={styles.statLabel}>Revenue</Text>
+            <Text style={styles.statValue}>{formatCurrency(todayStats.salesTotal)}</Text>
+            <Text style={styles.statMeta}>Revenue: {todayStats.salesCount}</Text>
+            <Text style={styles.statMeta}>
+              Avg {formatCurrency(todayStats.averageSale)}
+            </Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statLabel}>Today</Text>
+            <Text style={styles.statValue}>{formatCurrency(todayStats.net)}</Text>
+            <Text style={styles.statMeta}>Expense: {todayStats.costsCount}</Text>
+            <Text style={styles.statMeta}>Avg {formatCurrency(todayStats.costsTotal)}</Text>
+          </View>
+        </View>
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Menu</Text>
+          <Text style={styles.sectionSubtitle}>Popular Today</Text>
+        </View>
+
+        <View style={styles.menuCard}>
+          {menuItems.map((item) => (
+            <View key={item.name} style={styles.menuRow}>
+              <View>
+                <Text style={styles.menuName}>{item.name}</Text>
+                <Text style={styles.menuPrice}>{formatCurrency(item.price)}</Text>
+              </View>
+              <View style={styles.menuActions}>
+                <Pressable style={[styles.actionButton, styles.actionButtonDark]}>
+                  <Text style={[styles.actionButtonText, styles.actionButtonTextLight]}>-</Text>
+                </Pressable>
+                <Pressable style={styles.actionButton}>
+                  <Text style={styles.actionButtonText}>+</Text>
+                </Pressable>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.actions}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate("Add", { type: "sale" })}
+          >
+            <Text style={styles.primaryButtonText}>Add Sale</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.primaryButton, styles.secondaryButton]}
+            onPress={() => navigation.navigate("Add", { type: "cost" })}
+          >
+            <Text style={styles.primaryButtonText}>Add Cost</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -71,61 +140,180 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6F7FB",
-    paddingHorizontal: 20,
-    paddingTop: 12,
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    marginBottom: 16,
+    backgroundColor: "#B4232C",
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    paddingBottom: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  title: {
-    fontSize: 28,
+  brand: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    letterSpacing: 0.8,
+  },
+  settingsIcon: {
+    fontSize: 20,
+    color: "#FFFFFF",
+  },
+  segmentedControl: {
+    flexDirection: "row",
+    backgroundColor: "#F2F4F7",
+    marginHorizontal: 20,
+    marginTop: -16,
+    borderRadius: 18,
+    padding: 4,
+  },
+  segment: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderRadius: 14,
+  },
+  segmentActive: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  segmentText: {
+    fontSize: 14,
+    color: "#667085",
+    fontWeight: "600",
+  },
+  segmentTextActive: {
+    fontSize: 14,
+    color: "#B4232C",
     fontWeight: "700",
-    color: "#101828",
   },
-  totalsCard: {
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 32,
+  },
+  cardRow: {
+    flexDirection: "row",
+    gap: 14,
+    marginBottom: 22,
+  },
+  statCard: {
+    flex: 1,
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
-    padding: 20,
-    shadowColor: "#101828",
+    padding: 16,
+    shadowColor: "#1F2937",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 2,
+  },
+  statCardPrimary: {
+    borderWidth: 1,
+    borderColor: "#FAD7DA",
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#B4232C",
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#1F2937",
+    marginBottom: 8,
+  },
+  statMeta: {
+    fontSize: 12,
+    color: "#667085",
+  },
+  sectionHeader: {
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#1F2937",
+  },
+  sectionSubtitle: {
+    fontSize: 14,
+    color: "#667085",
+    marginTop: 2,
+  },
+  menuCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 22,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    shadowColor: "#1F2937",
     shadowOpacity: 0.08,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
-    elevation: 3,
+    elevation: 2,
   },
-  totalRow: {
-    marginBottom: 18,
+  menuRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EAECF0",
   },
-  totalLabel: {
+  menuName: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#1F2937",
+  },
+  menuPrice: {
+    fontSize: 13,
+    color: "#B4232C",
+    marginTop: 4,
+  },
+  menuActions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  actionButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#F2F4F7",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  actionButtonDark: {
+    backgroundColor: "#1F2937",
+  },
+  actionButtonText: {
+    color: "#B4232C",
     fontSize: 16,
-    color: "#667085",
-  },
-  totalValue: {
-    fontSize: 32,
     fontWeight: "700",
-    color: "#101828",
   },
-  netValue: {
-    fontSize: 36,
-    fontWeight: "800",
-    color: "#1B6EF3",
+  actionButtonTextLight: {
+    color: "#FFFFFF",
   },
   actions: {
     marginTop: 24,
-    gap: 16,
+    gap: 14,
   },
   primaryButton: {
-    backgroundColor: "#1B6EF3",
+    backgroundColor: "#B4232C",
     borderRadius: 16,
-    minHeight: 56,
+    minHeight: 54,
     alignItems: "center",
     justifyContent: "center",
   },
   secondaryButton: {
-    backgroundColor: "#12B76A",
+    backgroundColor: "#7A1920",
   },
   primaryButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
     color: "#FFFFFF",
   },
