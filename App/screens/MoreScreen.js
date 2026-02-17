@@ -1,21 +1,10 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 const MoreScreen = () => {
-  const navigation = useNavigation();
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>More</Text>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Shopify</Text>
-        <Pressable style={styles.card} onPress={() => navigation.navigate("Analytics") }>
-          <Text style={styles.itemText}>Open Shopify Intelligence</Text>
-          <Text style={styles.itemSubtext}>View customers, products, orders, and executive insights</Text>
-        </Pressable>
-      </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Settings</Text>
@@ -48,8 +37,8 @@ const MoreScreen = () => {
       <View style={styles.aboutSection}>
         <Text style={styles.sectionTitle}>About</Text>
         <Text style={styles.aboutText}>
-          SAVN now includes a professional Shopify analytics workspace so your team can track
-          revenue trends, customer retention, and product performance from one app.
+          ClearLedger helps you track daily sales and costs with a simple, reliable
+          workflow.
         </Text>
       </View>
     </SafeAreaView>

@@ -6,7 +6,6 @@ import HomeScreen from "../screens/HomeScreen";
 import AddScreen from "../screens/AddScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import MoreScreen from "../screens/MoreScreen";
-import AnalyticsScreen from "../screens/AnalyticsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,8 +32,6 @@ const getTabIcon = (routeName, focused) => {
           color={color}
         />
       );
-    case "Analytics":
-      return <Ionicons name={focused ? "stats-chart" : "stats-chart-outline"} size={24} color={color} />;
     default:
       return null;
   }
@@ -62,7 +59,6 @@ const RootNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Add" component={AddScreen} />
       <Tab.Screen name="History" component={HistoryScreen} />
-      <Tab.Screen name="Analytics" component={AnalyticsScreen} />
       <Tab.Screen name="More" component={MoreScreen} />
     </Tab.Navigator>
   );

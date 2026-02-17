@@ -1,43 +1,50 @@
-# SAVN — Shopify Analytics Dashboard
+# Welcome to your Expo app 👋
 
-A professional mobile dashboard for **Queen of Sparkles** with executive KPIs and Shopify intelligence.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## What this version includes
-- Shopify analytics workspace (customers, products, orders, AOV, retention rate).
-- Executive highlights for quick leadership updates.
-- Top-product leaderboard and daily sales trend.
-- Demo mode fallback for presentations when credentials are not configured.
+## Get started
 
-## Quick start (single command after setup)
+1. Install dependencies
 
-### 1) Install once
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+   npx expo start
+   ```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
 ```bash
-npm install
+npm run reset-project
 ```
 
-### 2) (Optional, for live Shopify data) configure environment
-Copy `.env.example` to `.env` and set your values:
-```bash
-cp .env.example .env
-```
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-Required keys:
-- `EXPO_PUBLIC_SHOPIFY_SHOP_DOMAIN` (example: `queen-of-sparkles.myshopify.com`)
-- `EXPO_PUBLIC_SHOPIFY_ADMIN_ACCESS_TOKEN` (Admin API token from a custom app)
+## Learn more
 
-### 3) Run
-```bash
-npm start
-```
+To learn more about developing your project with Expo, look at the following resources:
 
-Then open the app and go to the **Analytics** tab.
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Shopify scopes needed
-For current analytics features, your Shopify custom app token should include read scopes:
-- `read_orders`
-- `read_customers`
-- `read_products`
+## Join the community
 
-## Notes
-- No credentials? Analytics tab still works using realistic demo data for stakeholder demos.
-- Credentials present? App uses live Shopify Admin API data.
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
